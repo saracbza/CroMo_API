@@ -3,10 +3,7 @@ import bcrypt from 'bcrypt'
 import Usuario from '../../models/Usuario' 
 import { emailInstitucional } from '../../utils/validacoes'
 import jwt from 'jsonwebtoken'
-import { LocalStorage } from 'node-localstorage'
-import crypto from 'crypto'
-
-const localStorage = new LocalStorage('./scratch')
+import axios from 'axios'
 
 export default class AuthController {
 
@@ -50,14 +47,13 @@ static async store (req: Request, res: Response){
 
 	    const senhaCheck = bcrypt.compareSync(senha, usuario.senha)
 	    if (!senhaCheck) return res.status(401).json({error: "Senha inválida"})
+        //const secret = crypto.randomBytes(32).toString('hex')
+	    const token = jwt.sign({idUsuario}, process.env.SECRET as string, { expiresIn: '1h'})
 
-        const secret = crypto.randomBytes(32).toString('hex')
-	    const token = jwt.sign({idUsuario}, secret, { expiresIn: '1h'})
+        /*localStorage.setItem('secret', secret)
+        localStorage.setItem('token', token)*/
 
-        localStorage.setItem('secret', secret)
-        localStorage.setItem('token', token)
-
-        //axios.defaults.headers.common['x-access-token'] = token
+        axios.defaults.headers.common['x-access-token'] = token
 
         return res.status(200).json({ 
             nome: usuario.nome, 
@@ -70,9 +66,9 @@ static async store (req: Request, res: Response){
     static async logout (req: Request, res:Response) {
         const idUsuario = req.headers.userId
         const usuario = await Usuario.findOneBy ({ id: Number(idUsuario) })
-        //delete axios.defaults.headers.common['x-access-token']
-        localStorage.removeItem('token')
-        localStorage.removeItem('secret')
+        delete axios.defaults.headers.common['x-access-token']
+        /*localStorage.removeItem('token')
+        localStorage.removeItem('secret')*/
         console.log(`Usuário ${usuario?.nome} saiu`)
         return res.json({auth: false})
     }

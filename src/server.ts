@@ -1,11 +1,10 @@
 import express from 'express'
-import dotenv from 'dotenv'
 import { initializeDatabase, dataBase } from './database/ormconfig'
 import seed from './database/seed'
 import routes from './routes'
 //import cors from 'cors'
 
-dotenv.config()
+require('dotenv').config()
 const app = express()
 const port = process.env.PORT || 3000
 
