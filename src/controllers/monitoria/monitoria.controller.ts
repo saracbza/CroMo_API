@@ -60,13 +60,53 @@ export default class MonitoriaController{
 				const dia_semana = diaDaSemana(new Date(data))
 				
         const monitorias = await Monitoria.find({
-          relations: ["materia"],
+          relations: ['materia', 'local'],
           where: { dia_semana: dia_semana }
          })
 
-         const materiasSet = monitorias.map(monitoria => monitoria.materia)
-         const materias = Array.from(materiasSet)
+         const resultado = monitorias.map (monitoria => {
+            return {
+              id: monitoria.id,
+              materia: monitoria.materia.nome,
+              dia_semana: monitoria.dia_semana,
+              horario: `${monitoria.horario_inicio} - ${monitoria.horario_fim}`,
+              local: monitoria.local ?
+              (monitoria.local.numero ? `${monitoria.local.tipo} ${monitoria.local.numero}` : `${monitoria.local.tipo}`) 
+              : '',
+            }
+         })
 
-        return res.json(materias)
-     }        
+         return res.status(200).json(resultado)
+     }     
+     
+     static async showMonitor (req: Request, res: Response){
+      const idUsuario = req.headers.userId
+      
+      if (!idUsuario || isNaN(Number(idUsuario))) res.status(401).json({ error: 'Usuário não autenticado' })
+
+      const usuario = await Usuario.findOneBy({id: Number(idUsuario)})
+      if (!usuario) res.json("Usuário não existe")
+      
+      if (usuario !== null) {
+        const monitorias = await Monitoria.find({
+          relations: ['materia', 'local'],
+          where: { usuario: usuario }
+        })
+
+        const resultado = monitorias.map (monitoria => {
+          return {
+            id: monitoria.id,
+            materia: monitoria.materia.nome,
+            dia_semana: monitoria.dia_semana,
+            horario: `${monitoria.horario_inicio} - ${monitoria.horario_fim}`,
+            local: monitoria.local ?
+            (monitoria.local.numero ? `${monitoria.local.tipo} ${monitoria.local.numero}` : `${monitoria.local.tipo}`) 
+            : '',
+          }
+       })
+       console.log(resultado)
+       return res.status(200).json(resultado)
+      }
+       
+   }   
     }

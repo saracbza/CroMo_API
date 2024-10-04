@@ -5,6 +5,7 @@ import authMiddleware from '../../middlewares/auth.middleware'
 const monitoriaRoutes = Router()
 
 monitoriaRoutes.post('/', authMiddleware, MonitoriaController.store)
-monitoriaRoutes.get('/', authMiddleware, MonitoriaController.show)
+monitoriaRoutes.post('/show', authMiddleware, MonitoriaController.show)
+monitoriaRoutes.get('/showMonitor', authMiddleware, MonitoriaController.showMonitor)
 
 export default monitoriaRoutes
