@@ -4,6 +4,7 @@ import materiaRoutes from './materia/materia.routes'
 import monitoriaRoutes from './monitoria/monitoria.routes'
 import authRoutes from './auth/auth.routes'
 import localRoutes from './local/local.routes'
+import agendaRoutes from './agenda/agenda.routes'
 
 const routes = Router()
 
@@ -12,5 +13,6 @@ routes.use('/materia', materiaRoutes)
 routes.use('/monitoria', monitoriaRoutes)
 routes.use('/local', localRoutes)
 routes.use('/auth', authRoutes)
+routes.use('/agenda', agendaRoutes)
 
 export default routes
