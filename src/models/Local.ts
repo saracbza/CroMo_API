@@ -2,6 +2,7 @@ import { Entity, BaseEntity, PrimaryGeneratedColumn, Column, OneToMany } from "t
 import Monitoria from './Monitoria'
 import { TipoLocal } from "../utils/validacoes"
 import { IsEnum } from 'class-validator'
+import Agenda from "./Agenda"
 
 @Entity()
 export default class Local extends BaseEntity{
@@ -20,4 +21,7 @@ export default class Local extends BaseEntity{
 
     @OneToMany(() => Monitoria, monitoria => monitoria.local)
     monitorias!: Monitoria[]
+
+    @OneToMany(() => Agenda, agenda => agenda.local)
+    agendas!: Agenda[]
 }
