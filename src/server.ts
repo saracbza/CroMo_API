@@ -2,7 +2,7 @@ import express from 'express'
 import { initializeDatabase, dataBase } from './database/ormconfig'
 import seed from './database/seed'
 import routes from './routes'
-//import cors from 'cors'
+import cors from 'cors'
 
 require('dotenv').config()
 const app = express()
@@ -10,9 +10,9 @@ const port = process.env.PORT || 3000
 
 app.use(express.json())
 app.use(routes)
-/*app.use(cors({
+app.use(cors({
   origin: '*'
-}))*/
+}))
 
 const startServer = async () => {
   try {
