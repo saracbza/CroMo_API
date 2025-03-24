@@ -174,5 +174,25 @@ export default class AgendamentoController {
         }
       
       }}
+
+    static async delete (req: Request, res: Response) {
+    const { id } = req.params
+    const idUsuario = req.headers.userId
+
+    if(!id || isNaN(Number(id))) {
+      return res.status(400).json({ error: 'O agendamento deve ser informado para exclusão' })
     }
+
+    if (!idUsuario || isNaN(Number(idUsuario))) return res.status(401).json({ error: 'Usuário sem autenticação' })
+    const usuario = await Usuario.findOneBy({id: Number(id)})
+    
+    if (!usuario) return res.status(401).json({ error: 'Usuário não autenticado' })
+    const agendado = await Agendamento.findOne({ where: {id: Number(id), usuario: usuario }})
+
+    if (!agendado) return res.status(404).json({ error: 'Agendamento não encontrado' })
+
+    await agendado.remove()
+    return res.status(204).json('Agendamento excluído!')
+    }
+  }
 
