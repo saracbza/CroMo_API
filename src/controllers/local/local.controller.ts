@@ -32,13 +32,13 @@ static async show (req: Request, res: Response){
         if (!idUsuario) return res.status(401).json({ error: 'Usuário não autenticado' })    
         
         const usuario = await Usuario.findOneBy({id: Number(idUsuario)})
-        if (usuario?.tipo == "Aluno" || !usuario) return res.status(403).json("Usuário não possui permissão de acesso")    
+        if (!usuario) return res.status(403).json("Usuário não possui permissão de acesso")    
 
         const local = await Local.find()
         
         if (!local) 
-	      return res.status(404)
+	      return res.status(404).json({ error: "Nenhum local encontrado" })
 
-        return res.json(local) 
+        return res.status(200).json(local) 
     }	
 }

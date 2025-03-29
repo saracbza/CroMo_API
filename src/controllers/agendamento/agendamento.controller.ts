@@ -34,10 +34,17 @@ export default class AgendamentoController {
         if (usuario !== null)
         {
           const agendamentos = await Agendamento.find()
-          agendamentos.forEach(a => {
-          if (data == a.data && monitoria == a.monitoria && usuario == a.usuario) 
-            return res.status(409).json("Usuário já está agendado para esta monitoria")
-        }) 
+
+          data2.setHours(0, 0, 0, 0)
+          
+          const agendamentoExistente = agendamentos.find(a => {
+          a.data.setHours(0, 0, 0, 0)
+          return (data2.toDateString() === a.data.toDateString() && monitoria === a.monitoria && usuario === a.usuario)
+})
+
+        if (agendamentoExistente) {
+           return res.status(409).json("Usuário já está agendado para esta monitoria no mesmo dia.");
+        }
 
           const agendamento = new Agendamento()
           agendamento.data = data
@@ -93,14 +100,17 @@ export default class AgendamentoController {
            monitorias.forEach(monitoria => {
            
             if (!contagemAlunos.has(monitoria.id)) {
-              contagemAlunos.set(monitoria.id, new Map<string, number>());
+              contagemAlunos.set(monitoria.id, new Map<string, number>())
             }
           
-            const dataContagem = contagemAlunos.get(monitoria.id)!;
+            const dataContagem = contagemAlunos.get(monitoria.id)!
             monitoria.agendamentos.forEach(agendamento => {
+
+              console.log("Agendamentodata ", new Date (agendamento.data))
                 const dataConv = agendamento.data.toISOString().split('T')[0]
                 const count = dataContagem.get(dataConv) || 0
                 dataContagem.set(dataConv, count + 1)
+                console.log("data contagem e dataconv", dataContagem, dataConv)
             })
         })
           console.log("Consulta: agendamentos - Monitor")
@@ -109,7 +119,6 @@ export default class AgendamentoController {
             monitoria.agendamentos.map(agendamento => {
               const dataConv = agendamento.data.toISOString().split('T')[0]
               const quantidadeAluno = contagemAlunos.get(monitoria.id)?.get(dataConv) || 0
-                
               return {
                 local: monitoria.local 
                     ? (monitoria.local.numero ? `${monitoria.local.tipo} ${monitoria.local.numero}` : `${monitoria.local.tipo}`) 
@@ -165,5 +174,25 @@ export default class AgendamentoController {
         }
       
       }}
+
+    static async delete (req: Request, res: Response) {
+    const { id } = req.params
+    const idUsuario = req.headers.userId
+
+    if(!id || isNaN(Number(id))) {
+      return res.status(400).json({ error: 'O agendamento deve ser informado para exclusão' })
     }
+
+    if (!idUsuario || isNaN(Number(idUsuario))) return res.status(401).json({ error: 'Usuário sem autenticação' })
+    const usuario = await Usuario.findOneBy({id: Number(id)})
+    
+    if (!usuario) return res.status(401).json({ error: 'Usuário não autenticado' })
+    const agendado = await Agendamento.findOne({ where: {id: Number(id), usuario: usuario }})
+
+    if (!agendado) return res.status(404).json({ error: 'Agendamento não encontrado' })
+
+    await agendado.remove()
+    return res.status(204).json('Agendamento excluído!')
+    }
+  }
 
