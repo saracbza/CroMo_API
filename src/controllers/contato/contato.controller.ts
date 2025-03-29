@@ -1,6 +1,7 @@
 import { Request, Response } from 'express'
 import Usuario from '../../models/Usuario'
 import Contato from '../../models/Contato'
+import { emailInstitucional } from '../../utils/validacoes'
 
 export default class ContatoController{
     static async store (req: Request, res: Response){
@@ -14,6 +15,8 @@ export default class ContatoController{
 
         if(!nome|| !teamsUser || !teamsEmail ) 
         res.status(400).json({error: "Todos os dados são obrigatórios!"})
+
+        if(!emailInstitucional(teamsEmail)) return res.status(422).json({error: "Email inválido!"})
 
         const contato = new Contato()
         contato.nome = nome
