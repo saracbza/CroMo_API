@@ -4,8 +4,8 @@ import authMiddleware from '../../middlewares/auth.middleware'
 
 const agendaRoutes = Router()
 
-agendaRoutes.post('/store', authMiddleware, AgendaController.store)
-agendaRoutes.get('/show', authMiddleware, AgendaController.show)
-agendaRoutes.delete('/delete', authMiddleware, AgendaController.delete)
+agendaRoutes.post('/', authMiddleware, AgendaController.store)
+agendaRoutes.get('/', authMiddleware, AgendaController.show)
+agendaRoutes.delete('/', authMiddleware, AgendaController.delete)
 
 export default agendaRoutes
