@@ -9,5 +9,6 @@ authRoutes.post('/login', AuthController.login)
 //authRoutes.post('/refresh', AuthController.refresh)
 authRoutes.post('/logout', authMiddleware, AuthController.logout)
 authRoutes.post('/mudarFoto', authMiddleware, AuthController.mudarFoto)
+authRoutes.get('/monitores', authMiddleware, AuthController.showMonitores)
 
 export default authRoutes

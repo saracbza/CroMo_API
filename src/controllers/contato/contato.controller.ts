@@ -8,13 +8,12 @@ export default class ContatoController{
         const idUsuario = req.headers.userId
         const { nome, teamsUser, teamsEmail } = req.body 
         
-        if (!idUsuario || isNaN(Number(idUsuario))) res.status(401).json({ error: 'Usuário não autenticado' })
+        if (!idUsuario || isNaN(Number(idUsuario))) return res.status(401).json({ error: 'Usuário não autenticado' })
 
         const usuario = await Usuario.findOneBy({id: Number(idUsuario)})
-        if (usuario?.tipo == "Aluno") res.status(403).json("Usuário não possui permissão de acesso")
+        if (usuario?.tipo == "Aluno") return res.status(403).json("Usuário não possui permissão de acesso")
 
-        if(!nome|| !teamsUser || !teamsEmail ) 
-        res.status(400).json({error: "Todos os dados são obrigatórios!"})
+        if(!nome|| !teamsUser || !teamsEmail) return res.status(400).json({error: "Todos os dados são obrigatórios!"})
 
         if(!emailInstitucional(teamsEmail)) return res.status(422).json({error: "Email inválido!"})
 

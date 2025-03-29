@@ -86,4 +86,9 @@ static async store (req: Request, res: Response){
 
         return res.status(200).json('Foto alterada')
     }
+    static async showMonitores (req: Request, res:Response) {
+        const monitores = await Usuario.find ({ where: {tipo: 'Monitor'} })
+        if (!monitores) return res.status(404).json('Monitores não encontrados')
+        return res.status(200).json(monitores)
+    }
 }
