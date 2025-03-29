@@ -69,8 +69,9 @@ static async store (req: Request, res: Response){
         delete axios.defaults.headers.common['x-access-token']
         /*localStorage.removeItem('token')
         localStorage.removeItem('secret')*/
+        
         console.log(`Usuário ${usuario?.nome} saiu`)
-        return res.json({auth: false})
+        return res.status(200).json({auth: false})
     }
 
     static async mudarFoto (req: Request, res:Response) {

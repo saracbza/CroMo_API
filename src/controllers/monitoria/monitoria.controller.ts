@@ -56,11 +56,14 @@ export default class MonitoriaController{
 
         const usuario = await Usuario.findOneBy({id: Number(idUsuario)})
         if (!usuario) res.json("Usuário não existe")
-
-				const dia_semana = diaDaSemana(new Date(data))
+        
+        const dataForm = new Date(data)
+        console.log(dataForm)
+				const dia_semana = diaDaSemana(new Date(dataForm))
+        console.log(dia_semana)
 				
         const monitorias = await Monitoria.find({
-          relations: ['materia', 'local'],
+          relations: ['materia', 'local', 'usuario'],
           where: { dia_semana: dia_semana }
          })
 
@@ -73,13 +76,15 @@ export default class MonitoriaController{
               local: monitoria.local ?
               (monitoria.local.numero ? `${monitoria.local.tipo} ${monitoria.local.numero}` : `${monitoria.local.tipo}`) 
               : '',
+              monitor: monitoria.usuario.nome,
+              foto: monitoria.usuario.idFoto
             }
          })
-
+         console.log(resultado)
          return res.status(200).json(resultado)
      }     
      
-     static async showSemana (req: Request, res: Response){
+   /*  static async showSemana (req: Request, res: Response){
       const { diaSemana } = req.body
       const idUsuario = req.headers.userId
       
@@ -106,9 +111,9 @@ export default class MonitoriaController{
        })
 
        return res.status(200).json(resultado)
-   }   
+   }  */ 
 
-     static async showMonitor (req: Request, res: Response){
+  /*   static async showMonitor (req: Request, res: Response){
       const idUsuario = req.headers.userId
       
       if (!idUsuario || isNaN(Number(idUsuario))) res.status(401).json({ error: 'Usuário não autenticado' })
@@ -137,5 +142,5 @@ export default class MonitoriaController{
        return res.status(200).json(resultado)
       }
        
-   }   
+   }  */ 
     }

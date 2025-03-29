@@ -6,6 +6,6 @@ const monitoriaRoutes = Router()
 
 monitoriaRoutes.post('/', authMiddleware, MonitoriaController.store)
 monitoriaRoutes.post('/show', authMiddleware, MonitoriaController.show)
-monitoriaRoutes.get('/showMonitor', authMiddleware, MonitoriaController.showMonitor)
+//monitoriaRoutes.get('/showMonitor', authMiddleware, MonitoriaController.showMonitor)
 
 export default monitoriaRoutes
