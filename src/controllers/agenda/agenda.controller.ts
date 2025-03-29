@@ -99,7 +99,7 @@ export default class AgendaController{
     if (!usuario) return res.status(401).json({ error: 'Usuário não autenticado' })
     const agenda = await Agenda.findOne({ where: {id: Number(id), usuario: usuario }})
 
-    if (!agenda) return res.status(404).json({ error: 'Agendamento não encontrado' })
+    if (!agenda) return res.status(404).json({ error: 'Agenda não encontrada' })
 
     await agenda.remove()
     return res.status(204).json('Agenda excluída!')
