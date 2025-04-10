@@ -6,7 +6,7 @@ import cors from 'cors'
 
 require('dotenv').config()
 const app = express()
-const port = process.env.PORT || 3000
+const port = Number(process.env.PORT) || 3000
 
 app.use(express.json())
 app.use(routes)
@@ -21,7 +21,7 @@ const startServer = async () => {
     await seed();
     console.log('Seed executado com sucesso!')
 
-    app.listen(port, () => {
+    app.listen(port, '0.0.0.0', () => {
       console.log(`Servidor executando na porta ${port}`)
     })
   } catch (error) {

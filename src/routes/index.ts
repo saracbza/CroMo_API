@@ -6,6 +6,7 @@ import authRoutes from './auth/auth.routes'
 import localRoutes from './local/local.routes'
 import agendaRoutes from './agenda/agenda.routes'
 import contatoRoutes from './contato/contato.routes'
+import esqueciSenhaRoutes from './esqueciSenha/esqueciSenha.routes'
 
 const routes = Router()
 
@@ -16,5 +17,6 @@ routes.use('/local', localRoutes)
 routes.use('/auth', authRoutes)
 routes.use('/agenda', agendaRoutes)
 routes.use('/contato', contatoRoutes)
+routes.use('/esqueciSenha', esqueciSenhaRoutes)
 
 export default routes

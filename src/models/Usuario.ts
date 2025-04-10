@@ -2,9 +2,11 @@ import { version } from './../../node_modules/@types/validator/index.d';
 import { Entity, BaseEntity, PrimaryGeneratedColumn, Column, Unique, OneToMany } from 'typeorm'
 import Agendamento from "./Agendamento"
 import Monitoria from "./Monitoria"
+import EsqueciSenhaToken from "./EsqueciSenha"
 import { opcoesCursos } from '../utils/validacoes'
 import { IsEnum } from 'class-validator'
 import Agenda from './Agenda';
+import EsqueciSenha from './EsqueciSenha';
 
 @Entity()
 @Unique(["email"])
@@ -44,4 +46,7 @@ export default class Usuario extends BaseEntity {
 	  
 	  @OneToMany(() => Agendamento, agendamento => agendamento.usuario)
 	  agendamentos?: Agendamento[]
+
+	  @OneToMany(() => EsqueciSenha, token => token.usuario)
+	  esqueciSenha?: EsqueciSenhaToken[]
 }
