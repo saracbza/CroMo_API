@@ -101,5 +101,23 @@ static async store (req: Request, res: Response){
         if (!monitores) return res.status(404).json('Monitores não encontrados')
         return res.status(200).json(monitores)
     }
-  }
-    
+
+    static async showMonitoresMonitoria (req: Request, res: Response) {
+        try {
+          const monitores = await Usuario.createQueryBuilder('usuario')
+            .leftJoinAndSelect('usuario.monitorias', 'monitoria')
+            .leftJoinAndSelect('monitoria.materia', 'materia')
+            .where('usuario.tipo = :tipo', { tipo: 'Monitor' })
+            .getMany()
+      
+          if (!monitores || monitores.length === 0) {
+            return res.status(404).json({ error: 'Monitores não encontrados' })
+          }
+      
+          return res.status(200).json(monitores)
+        } catch (error) {
+          console.error('Erro ao buscar monitores:', error)
+          return res.status(500).json({ error: 'Erro interno no servidor' })
+        }
+      }
+}            
