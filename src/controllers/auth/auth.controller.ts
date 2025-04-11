@@ -4,9 +4,18 @@ import Usuario from '../../models/Usuario'
 import { emailInstitucional } from '../../utils/validacoes'
 import jwt from 'jsonwebtoken'
 import axios from 'axios'
-import AuthService from './auth.service'
+import { Resend } from 'resend'
+import { v4 as uuidv4 } from 'uuid'
+import { AppDataSource } from '../../data-source'
+import TokenRecuperacao from '../../models/TokenRecuperacao'
 
 export default class AuthController {
+    static enviarEmailRedefinicao(arg0: string, enviarEmailRedefinicao: any) {
+        throw new Error('Method not implemented.')
+    }
+    static redefinirSenha(arg0: string, redefinirSenha: any) {
+        throw new Error('Method not implemented.')
+    }
 
 static async store (req: Request, res: Response){
         const { nome, email, senha, curso, tipo, idFoto } = req.body 
@@ -92,30 +101,5 @@ static async store (req: Request, res: Response){
         if (!monitores) return res.status(404).json('Monitores não encontrados')
         return res.status(200).json(monitores)
     }
-
-    static async esqueciSenha(req: Request, res: Response) {
-        const { email } = req.body
-        if (!email) return res.status(400).json({ error: 'E-mail obrigatório' })
+  }
     
-        try {
-          await AuthService.requestResetSenha(email)
-          return res.status(200).json({ message: 'E-mail de recuperação enviado com sucesso' })
-        } catch (error) {
-          console.error(error)
-          return res.status(500).json({ error: 'Erro ao enviar e-mail de recuperação' })
-        }
-      }
-    
-      static async resetSenha(req: Request, res: Response) {
-        const { token, novaSenha } = req.body
-        if (!token || !novaSenha) return res.status(400).json({ error: 'Token e nova senha são obrigatórios' })
-    
-        try {
-          await AuthService.resetSenha(token, novaSenha)
-          return res.status(200).json({ message: 'Senha alterada com sucesso' })
-        } catch (error) {
-          console.error(error)
-          return res.status(500).json({ error: 'Erro ao redefinir senha' })
-        }
-      }
-    }

@@ -1,13 +1,13 @@
 import { DataSource } from 'typeorm'
 import Usuario from './models/Usuario'
-import EsqueciSenha from './models/EsqueciSenha'
+import TokenRecuperacao from './models/TokenRecuperacao'
 
 export const AppDataSource = new DataSource({
   type: "sqlite",
   database: "database.sqlite",
   synchronize: true,
   logging: false,
-  entities: [Usuario, EsqueciSenha],
+  entities: [Usuario, TokenRecuperacao],
   migrations: [],
   subscribers: [],
 })

@@ -2,11 +2,11 @@ import { version } from './../../node_modules/@types/validator/index.d';
 import { Entity, BaseEntity, PrimaryGeneratedColumn, Column, Unique, OneToMany } from 'typeorm'
 import Agendamento from "./Agendamento"
 import Monitoria from "./Monitoria"
-import EsqueciSenhaToken from "./EsqueciSenha"
+import EsqueciSenhaToken from "./TokenRecuperacao"
 import { opcoesCursos } from '../utils/validacoes'
 import { IsEnum } from 'class-validator'
 import Agenda from './Agenda';
-import EsqueciSenha from './EsqueciSenha';
+import EsqueciSenha from './TokenRecuperacao';
 
 @Entity()
 @Unique(["email"])

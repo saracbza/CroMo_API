@@ -1,9 +1,9 @@
 import { Router } from 'express'
-import AuthController from '../../controllers/auth/auth.controller'
+import { enviarEmailRedefinicao, redefinirSenha } from '../../controllers/auth/auth.service'
 
 const esqueciSenhaRoutes = Router()
 
-esqueciSenhaRoutes.post('/esqueci-senha', AuthController.esqueciSenha)
-esqueciSenhaRoutes.post('/reset-senha', AuthController.resetSenha)
+esqueciSenhaRoutes.post('/esqueci-senha', enviarEmailRedefinicao)
+esqueciSenhaRoutes.post('/reset-senha', redefinirSenha)
 
 export default esqueciSenhaRoutes
