@@ -8,7 +8,7 @@ import { opcoesCursos, TipoLocal } from "../utils/validacoes"
 import bcrypt from 'bcrypt'
 
 async function seed() {
-    const cadastrar = true
+    const cadastrar = false
 
     if (cadastrar){
     console.log('Iniciando cadastros...')

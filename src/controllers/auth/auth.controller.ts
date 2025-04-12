@@ -36,7 +36,7 @@ static async store (req: Request, res: Response){
 	    usuario.senha = bcrypt.hashSync(senha, 10)
 	    usuario.curso = curso ?? ""
         usuario.tipo = tipo
-        usuario.idFoto = idFoto ?? ""
+        usuario.idFoto = idFoto ?? 1
 	    await usuario.save() 
 	        
 		return res.status(200).json({
@@ -88,6 +88,7 @@ static async store (req: Request, res: Response){
         const idUsuario = req.headers.userId
         const { fotoId } = req.body
         console.log("foto passada: ", Number(fotoId))
+        if (!fotoId) return res.json({error: "Foto não informada"})
         const usuario = await Usuario.findOneBy ({ id: Number(idUsuario) })
         if (usuario !== null){
             usuario.idFoto = Number(fotoId) ? Number(fotoId) : usuario?.idFoto
