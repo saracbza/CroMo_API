@@ -1,4 +1,5 @@
 import Agenda from "../models/Agenda"
+import Contato from "../models/Contato"
 import Local from "../models/Local"
 import Materia from "../models/Materia"
 import Monitoria from "../models/Monitoria"
@@ -7,7 +8,7 @@ import { opcoesCursos, TipoLocal } from "../utils/validacoes"
 import bcrypt from 'bcrypt'
 
 async function seed() {
-    const cadastrar = false
+    const cadastrar = true
 
     if (cadastrar){
     console.log('Iniciando cadastros...')
@@ -152,17 +153,12 @@ async function seed() {
         
     ]
 
-    await Promise.all(agendas.map(async (dados) => { 
-        if (dados.usuario && dados.local){
-        const agenda = new Agenda()
-        agenda.dia_semana = dados.dia_semana
-        agenda.horario_inicio = dados.horario_inicio
-        agenda.horario_fim = dados.horario_fim
-        agenda.usuario = dados.usuario
-        agenda.nome_materia = dados.nomeMateria
-        agenda.local = dados.local
-        await agenda.save()
-    }
+    await Promise.all(contatos.map(async (dados) => { 
+        const contato = new Contato()
+        contato.nome = dados.nome
+        contato.teamsEmail = dados.teamsEmail
+        contato.teamsUser = dados.teamsUser
+        await contato.save()
      }))
       console.log('Finalizando cadastros...')
     }
