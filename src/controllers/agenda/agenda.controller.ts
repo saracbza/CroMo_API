@@ -9,19 +9,19 @@ export default class AgendaController{
         const idUsuario = req.headers.userId
         const { dia_semana, horario_inicio, horario_fim, idLocal, nomeMateria } = req.body 
         
-        if (!idUsuario || isNaN(Number(idUsuario))) res.status(401).json({ error: 'Usuário não autenticado' })
+        if (!idUsuario || isNaN(Number(idUsuario))) return res.status(401).json({ error: 'Usuário não autenticado' })
 
         const usuario = await Usuario.findOneBy({id: Number(idUsuario)})
-        if (usuario?.tipo == "Monitor") res.status(403).json("Usuário não possui permissão de acesso")
+        if (usuario?.tipo == "Monitor") return  res.status(403).json("Usuário não possui permissão de acesso")
 
-        if(!idLocal || isNaN(Number(idLocal))) res.status(400).json("Local é obrigatório")
+        if(!idLocal || isNaN(Number(idLocal))) return  res.status(400).json("Local é obrigatório")
         const local = await Local.findOneBy({id: Number(idLocal)})
-        if (!local) res.status(400).json("Local informado não existe")
+        if (!local) return  res.status(400).json("Local informado não existe")
 
-        if(!nomeMateria) res.status(400).json("Nome da matéria é obrigatório")
+        if(!nomeMateria)  return res.status(400).json("Nome da matéria é obrigatório")
 
         if(!dia_semana|| !horario_inicio || !horario_fim ) 
-        res.status(400).json({error: "Todos os dados são obrigatórios!"})
+        return  res.status(400).json({error: "Todos os dados são obrigatórios!"})
 
         const semanaLower = [
           "segunda-feira", "terça-feira", "quarta-feira", 
@@ -29,7 +29,7 @@ export default class AgendaController{
       ]
 
         if (!semanaLower.includes(dia_semana.toLowerCase()))
-        res.status(400).json("Dia da semana informado não existe")
+        return res.status(400).json("Dia da semana informado não existe")
 
         if (local !== null && usuario !== null){
 	       const agenda = new Agenda()
@@ -54,7 +54,7 @@ export default class AgendaController{
      static async show (req: Request, res: Response){
       const idUsuario = req.headers.userId
       
-      if (!idUsuario || isNaN(Number(idUsuario))) res.status(401).json({ error: 'Usuário não autenticado' })
+      if (!idUsuario || isNaN(Number(idUsuario))) return  res.status(401).json({ error: 'Usuário não autenticado' })
 
       const usuario = await Usuario.findOneBy({id: Number(idUsuario)})
       if (!usuario) res.json("Usuário não existe")
@@ -94,7 +94,7 @@ export default class AgendaController{
     }
 
     if (!idUsuario || isNaN(Number(idUsuario))) return res.status(401).json({ error: 'Usuário sem autenticação' })
-    const usuario = await Usuario.findOneBy({id: Number(id)})
+    const usuario = await Usuario.findOneBy({ id: Number(idUsuario) })
     
     if (!usuario) return res.status(401).json({ error: 'Usuário não autenticado' })
     const agenda = await Agenda.findOne({ where: {id: Number(id), usuario: usuario }})
@@ -104,4 +104,4 @@ export default class AgendaController{
     await agenda.remove()
     return res.status(204).json('Agenda excluída!')
     } 
-    }
+  }
