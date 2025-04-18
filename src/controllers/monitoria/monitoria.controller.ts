@@ -42,7 +42,9 @@ export default class MonitoriaController{
           horario_inicio: monitoria.horario_inicio,
           horario_fim: monitoria.horario_fim,
           local: monitoria.local,
-          monitor: monitoria.usuario.nome
+          monitor: monitoria.usuario.nome,
+          foto: monitoria.usuario.idFoto,
+          idFoto: monitoria.materia.idFoto
         })}
 
 	      }
@@ -79,14 +81,15 @@ export default class MonitoriaController{
               (monitoria.local.numero ? `${monitoria.local.tipo} ${monitoria.local.numero}` : `${monitoria.local.tipo}`) 
               : '',
               monitor: monitoria.usuario.nome,
-              foto: monitoria.usuario.idFoto
+              foto: monitoria.usuario.idFoto,
+              idFoto: monitoria.materia.idFoto
             }
          })
          console.log(resultado)
          return res.status(200).json(resultado)
      }     
   
-     //mostra todas as monitorias do dia da semana da data escolhida
+  //mostra todas as monitorias do dia da semana da data escolhida
 	static async showMonitor (req: Request, res: Response){
     const { data, idMonitor } = req.body
     const idUsuario = req.headers.userId
@@ -123,6 +126,7 @@ export default class MonitoriaController{
           (monitoria.local.numero ? `${monitoria.local.tipo} ${monitoria.local.numero}` : `${monitoria.local.tipo}`) 
           : '',
           monitor: monitoria.usuario.nome,
+          idFoto: monitoria.materia.idFoto
         }
      })
      console.log(resultado)

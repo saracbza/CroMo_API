@@ -23,8 +23,10 @@ export default class AgendamentoController {
         if(!idMonitoria || isNaN(Number(idMonitoria))) return res.status(401).json({ error: 'Monitoria inválida' })
 				
         const monitoria = await Monitoria.findOneBy({ id: Number(idMonitoria) })
-        if (!monitoria || !data ) return res.status(400).json({error: 'Monitoria e data devem ser preenchidas!'})
-
+        if (!monitoria) return res.status(400).json({error: 'Monitoria inválida'})
+        
+        if (!data) return res.status(400).json({error: 'Data deve ser preenchida!'})
+          
         const data2 = new Date(data)
         const diaSemana = diaDaSemana(data2)
         console.log(diaSemana)

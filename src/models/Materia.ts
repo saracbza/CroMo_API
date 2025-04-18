@@ -9,6 +9,9 @@ export default class Materia extends BaseEntity {
 	  @Column()
 	  nome!: string
   
+	  @Column({default: 1})
+	  idFoto!: number
+
 	  @OneToMany(() => Monitoria, monitoria => monitoria.materia)
 	  monitorias!: Monitoria[]
 }

@@ -8,7 +8,7 @@ import { opcoesCursos, TipoLocal } from "../utils/validacoes"
 import bcrypt from 'bcrypt'
 
 async function seed() {
-    const cadastrar = false
+    const cadastrar = true
 
     if (cadastrar){
     console.log('Iniciando cadastros...')
@@ -51,13 +51,14 @@ async function seed() {
 
     // Cadastro das materias
     const materias = [
-        { nome: 'Informática' }, //1
-        { nome: 'Contabilidade' } //2
+        { nome: 'Informática', idFoto: 1 }, //1
+        { nome: 'Contabilidade', idFoto: 5 } //2
     ]
 
     await Promise.all(materias.map(async (dados) => { 
         const materia = new Materia()
         materia.nome = dados.nome
+        materia.idFoto = dados.idFoto ? dados.idFoto : 1
         await materia.save() 
       }))
 
