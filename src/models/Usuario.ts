@@ -22,9 +22,6 @@ export default class Usuario extends BaseEntity {
 
 	  @Column()
 	  nome!: string
-
-	  @Column()
-	  senha!: string
 	  
 	  @Column({
         type: 'text',

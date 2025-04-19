@@ -68,12 +68,12 @@ const resend = new Resend(process.env.RESEND_API_KEY);
         return res.status(400).json({ error: 'Token expirado' })
       }
     
-      const usuario = tokenRec.usuario
+      /*const usuario = tokenRec.usuario
       const novaSenhaHash = await bcrypt.hash(novaSenha, 10)
       usuario.senha = novaSenhaHash
     
       await dataBase.getRepository(Usuario).save(usuario)
-      await tokenRepo.remove(tokenRec) // remove o token após uso
+      await tokenRepo.remove(tokenRec)*/ // remove o token após uso
     
       return res.status(200).json({ message: 'Senha redefinida com sucesso!' })
     }

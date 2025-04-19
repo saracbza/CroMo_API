@@ -8,11 +8,12 @@ require('dotenv').config()
 const app = express()
 const port = Number(process.env.PORT) || 3000
 
+app.use(cors({
+  origin: '*',
+  allowedHeaders: ['Content-Type', 'x-access-token', 'userId']
+}))
 app.use(express.json())
 app.use(routes)
-app.use(cors({
-  origin: '*'
-}))
 
 const startServer = async () => {
   try {
