@@ -7,107 +7,101 @@ import axios from 'axios'
 import * as admin from 'firebase-admin'
 
 export default class AuthController {
-    static enviarEmailRedefinicao(arg0: string, enviarEmailRedefinicao: any) {
-        throw new Error('Method not implemented.')
-    }
-    static redefinirSenha(arg0: string, redefinirSenha: any) {
-        throw new Error('Method not implemented.')
-    }
 
-    static async firebaseLogin (req: Request, res: Response){
-      const { email } = req.body 
-      const firebaseUid = req.body.firebaseUid
-      if (!firebaseUid) return res.status(401).json({ error: 'UID do Firebase não encontrado no corpo da requisição' });
+  static async firebaseLogin (req: Request, res: Response){
+    const { email } = req.body 
+    const firebaseUid = req.body.firebaseUid
+    if (!firebaseUid) return res.status(401).json({ error: 'UID do Firebase não encontrado no corpo da requisição' })
 
-      const firebaseToken = req.headers['x-firebase-token'] as string;
-      console.log("Headers recebidos:", req.headers);
+    const firebaseToken = req.headers['x-firebase-token'] as string
+    console.log("Headers recebidos:", req.headers)
 
-      if (!firebaseToken) return res.status(401).json({ error: 'Token não fornecido no header' });
-      console.log("Headers recebidos:", req.headers);
+    if (!firebaseToken) return res.status(401).json({ error: 'Token não fornecido no header' })
+    console.log("Headers recebidos:", req.headers)
 
-      if (!firebaseToken) return res.status(400).json({ error: 'Token do Firebase não enviado.' });
-      console.log("Headers recebidos:", req.headers);
-      try {
-        console.log('UID do Firebase:', firebaseUid);
+    if (!firebaseToken) return res.status(400).json({ error: 'Token do Firebase não enviado.' })
+    console.log("Headers recebidos:", req.headers)
+    try {
+      console.log('UID do Firebase:', firebaseUid)
 
-        const decodedToken = await admin.auth().verifyIdToken(firebaseToken);
-        console.log('Firebase token válido para UID:', decodedToken.uid);    
-          
-        const usuario = await Usuario.findOneBy({ email: email })
-        console.log("Headers recebidos:", req.headers);
-
-        if (!usuario) {
-          return res.status(404).json({ message: 'Usuário não encontrado no sistema interno.' })
-        }
-        console.log("Headers recebidos:", req.headers);
-
-        const payload = {
-          id: usuario.id,
-          email: usuario.email,
-          tipo: usuario.tipo
-        }
-        console.log("Headers recebidos:", req.headers);
-
-        const token = jwt.sign(payload, process.env.SECRET as string, { expiresIn: '1h' })
-        console.log("Headers recebidos:", req.headers);
-
-        return res.status(200).json({
-          token,
-          user: {
-            id: usuario.id,
-            nome: usuario.nome,
-            email: usuario.email,
-            tipo: usuario.tipo,
-            curso: usuario.curso,
-            foto: usuario.idFoto,
-          }
-      })
-
-      } catch (error) {
-        console.error('Erro ao validar token Firebase:', error)
-        return res.status(401).json({ message: 'Token inválido ou expirado.' })
-      }
-    }
-      
-    static async store (req: Request, res: Response){
-      const { nome, email, senha, curso, tipo, idFoto } = req.body 
-      
-      if(!nome || !tipo ) return res.status(400).json({error: "Nome e tipo obrigatórios!"}) 
-      if(!email || !senha) return res.status(400).json({error: "Email e senha obrigatórios!"})
-      if(!emailInstitucional(email)) return res.status(422).json({error: "Email inválido!"})
-      
-      const usuarioExistente = await Usuario.findOneBy({ email })
-
-      if (usuarioExistente) {
-        return res.status(409).json({ error: 'Email já cadastrado!' })
-      }
-          
-      if (tipo == "Aluno") //aluno
-      if(!curso) return res.status(400).json({error: "Curso obrigatório"})
+      const decodedToken = await admin.auth().verifyIdToken(firebaseToken)
+      console.log('Firebase token válido para UID:', decodedToken.uid)  
         
-      const usuario = new Usuario()
-        usuario.nome = nome
-        usuario.email = email
-        usuario.tipo = tipo
-        usuario.curso = curso ?? ""
-        usuario.idFoto = idFoto ?? 1
-  
-      await usuario.save()
-  
-      return res.status(201).json({
+      const usuario = await Usuario.findOneBy({ email: email })
+      console.log("Headers recebidos:", req.headers)
+
+      if (!usuario) {
+        return res.status(404).json({ message: 'Usuário não encontrado no sistema interno.' })
+      }
+      console.log("Headers recebidos:", req.headers)
+
+      const payload = {
         id: usuario.id,
-        nome: usuario.nome,
         email: usuario.email,
-        tipo: usuario.tipo,
-        curso: usuario.curso,
-        idFoto: usuario.idFoto
-      })
+        tipo: usuario.tipo
+      }
+      console.log("Headers recebidos:", req.headers);
+
+      const token = jwt.sign(payload, process.env.SECRET as string, { expiresIn: '1h' })
+      console.log("Headers recebidos:", req.headers);
+
+      return res.status(200).json({
+        token,
+        user: {
+          id: usuario.id,
+          nome: usuario.nome,
+          email: usuario.email,
+          tipo: usuario.tipo,
+          curso: usuario.curso,
+          foto: usuario.idFoto,
+        }
+    })
+
+    } catch (error) {
+      console.error('Erro ao validar token Firebase:', error)
+      return res.status(401).json({ message: 'Token inválido ou expirado.' })
     }
+  }
+    
+  static async store (req: Request, res: Response){
+    const { nome, email, senha, curso, tipo, idFoto } = req.body 
+    
+    if(!nome || !tipo ) return res.status(400).json({error: "Nome e tipo obrigatórios!"}) 
+    if(!email) return res.status(400).json({error: "Email e senha obrigatórios!"})
+    if(!emailInstitucional(email)) return res.status(422).json({error: "Email inválido!"})
+    
+    const usuarioExistente = await Usuario.findOneBy({ email })
 
+    if (usuarioExistente) {
+      return res.status(409).json({ error: 'Email já cadastrado!' })
+    }
+        
+    if (tipo == "Aluno" && !curso) //aluno
+    if(!curso) return res.status(400).json({error: "Curso obrigatório"})
+      
+    const usuario = new Usuario()
+      usuario.nome = nome
+      usuario.email = email
+      usuario.tipo = tipo
+      usuario.curso = curso ?? ""
+      usuario.idFoto = idFoto ?? 1
+
+    await usuario.save()
+
+    return res.status(201).json({
+      id: usuario.id,
+      nome: usuario.nome,
+      email: usuario.email,
+      tipo: usuario.tipo,
+      curso: usuario.curso,
+      idFoto: usuario.idFoto
+    })
+  }
+/*
     static async login (req: Request, res: Response){
-        const { email, senha } = req.body
+        const { email } = req.body
 
-        if (!email ||!senha)
+        if (!email)
           return res.status(400).json({error: "Email e senha são obrigatórios"})
 
         const usuario = await Usuario.findOneBy ({ email })
@@ -119,8 +113,8 @@ export default class AuthController {
       //const secret = crypto.randomBytes(32).toString('hex')
 	    const token = jwt.sign({idUsuario}, process.env.SECRET as string, { expiresIn: '1h'})
 
-        /*localStorage.setItem('secret', secret)
-        localStorage.setItem('token', token)*/
+        localStorage.setItem('secret', secret)
+        localStorage.setItem('token', token)
 
         axios.defaults.headers.common['x-access-token'] = token
 
@@ -131,7 +125,7 @@ export default class AuthController {
           foto: usuario.idFoto,
           token })
     }
-
+*/
     static async logout (req: Request, res:Response) {
         const idUsuario = req.headers.userId
         const usuario = await Usuario.findOneBy ({ id: Number(idUsuario) })

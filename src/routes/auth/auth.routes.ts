@@ -21,7 +21,7 @@ authRoutes.get('/perfil', firebaseAuth, async (req, res) => {
 
 authRoutes.post('/register', AuthController.store)
 authRoutes.post('/firebase-login', firebaseAuth, AuthController.firebaseLogin)
-authRoutes.post('/login', AuthController.login)
+//authRoutes.post('/login', AuthController.login)
 //authRoutes.post('/refresh', AuthController.refresh)
 authRoutes.post('/logout', authMiddleware, AuthController.logout)
 authRoutes.post('/mudarFoto', authMiddleware, AuthController.mudarFoto)
