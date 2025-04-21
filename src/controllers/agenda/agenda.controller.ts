@@ -24,8 +24,8 @@ export default class AgendaController{
         return  res.status(400).json({error: "Todos os dados são obrigatórios!"})
 
         const semanaLower = [
-          "segunda-feira", "terça-feira", "quarta-feira", 
-          "quinta-feira", "sexta-feira", "sábado", "domingo", 
+          "domingo", "segunda-feira", "terça-feira", "quarta-feira", 
+          "quinta-feira", "sexta-feira", "sábado"
       ]
 
         if (!semanaLower.includes(dia_semana.toLowerCase()))

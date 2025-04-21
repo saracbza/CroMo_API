@@ -3,7 +3,7 @@ import Agendamento from '../../models/Agendamento'
 import Usuario from '../../models/Usuario'
 import Monitoria from '../../models/Monitoria'
 import { diaDaSemana, TipoLocal } from '../../utils/validacoes'
-import { MoreThanOrEqual } from 'typeorm'
+import { Between, MoreThanOrEqual } from 'typeorm'
 //import axios from 'axios'
 
 export default class AgendamentoController {
@@ -22,30 +22,55 @@ export default class AgendamentoController {
         
         if(!idMonitoria || isNaN(Number(idMonitoria))) return res.status(401).json({ error: 'Monitoria inválida' })
 				
-        const monitoria = await Monitoria.findOneBy({ id: Number(idMonitoria) })
+        const monitoria = await Monitoria.findOne({
+          where: { id: Number(idMonitoria) },
+          relations: ['materia']
+        })
         if (!monitoria) return res.status(400).json({error: 'Monitoria inválida'})
         
         if (!data) return res.status(400).json({error: 'Data deve ser preenchida!'})
           
+        console.log("Data recebida:", data);
         const data2 = new Date(data)
         const diaSemana = diaDaSemana(data2)
         console.log(diaSemana)
 
-        if (new Date(data) < hoje || monitoria.dia_semana !== diaSemana) return res.status(401).json("Data inválida")
+        hoje.setHours(0,0,0,0)
+        data2.setHours(0,0,0,0)
         
+        
+        if (data2 < hoje) {
+          console.log('monitoria.dia_semana: ', monitoria.dia_semana)
+          console.log('diaSemana: ', diaSemana)
+          return res.status(401).json({ 
+              error: "Data inválida: data anterior ao dia atual ou não corresponde ao dia da semana da monitoria", 
+          })
+        }
+
         if (usuario !== null)
         {
           const agendamentos = await Agendamento.find()
-
-          data2.setHours(0, 0, 0, 0)
+          const inicioDoDia = new Date(data2);
+          inicioDoDia.setHours(0, 0, 0, 0);
           
-          const agendamentoExistente = agendamentos.find(a => {
-          a.data.setHours(0, 0, 0, 0)
-          return (data2.toDateString() === a.data.toDateString() && monitoria === a.monitoria && usuario === a.usuario)
-})
+          const fimDoDia = new Date(data2);
+          fimDoDia.setHours(23, 59, 59, 999);
+          
+          data2.setHours(0, 0, 0, 0)
+          console.log('Data recebida (ISO):', data2.toISOString());
+          console.log('Data recebida (Local):', data2.toLocaleString());
 
+          const agendamentoExistente = await Agendamento.findOne({
+            where: {
+              data: Between(inicioDoDia, fimDoDia),
+              monitoria: { id: monitoria.id },
+              usuario: { id: usuario.id }
+            },
+            relations: ['monitoria', 'usuario']
+          })                    
+          
         if (agendamentoExistente) {
-           return res.status(409).json("Usuário já está agendado para esta monitoria no mesmo dia.");
+          return res.status(409).json("Usuário já está agendado para esta monitoria no mesmo dia.");
         }
 
           const agendamento = new Agendamento()
@@ -56,7 +81,13 @@ export default class AgendamentoController {
 
           await agendamento.save()
         
-          return res.status(201).json(agendamento)
+          return res.status(201).json({
+            id: agendamento.id,
+            data: agendamento.data,
+            usuario: { id: usuario.id, nome: usuario.nome },
+            monitoria: { id: monitoria.id, materia: monitoria.materia.nome },
+            observacao: agendamento.observacao
+          })
         }
         return res.json('Erro com usuário')
     }
@@ -85,6 +116,7 @@ export default class AgendamentoController {
     static async show (req: Request, res: Response){
 		    const idUsuario = req.headers.userId
         const hoje = new Date()
+        hoje.setHours(0, 0, 0, 0)
 
         if (!idUsuario || isNaN(Number(idUsuario))) res.status(401).json({ error: 'Usuário não autenticado' })
         const usuario = await Usuario.findOneBy({id: Number(idUsuario)})
@@ -174,7 +206,7 @@ export default class AgendamentoController {
         }))
         return res.status(200).json(resultado)
         }
-      
+        return res.status(400).json({ error: 'Tipo de usuário inválido' });
       }}
 
     static async delete (req: Request, res: Response) {

@@ -5,7 +5,6 @@ import Materia from "../models/Materia"
 import Monitoria from "../models/Monitoria"
 import Usuario from "../models/Usuario"
 import { opcoesCursos, TipoLocal } from "../utils/validacoes"
-import bcrypt from 'bcrypt'
 
 async function seed() {
     const cadastrar = false
@@ -84,21 +83,21 @@ async function seed() {
 
     //Cadastro das monitorias
     const monitorias = [
-        { dia_semana: 'Sabado', horario_inicio: '09:30', horario_fim: '10:30', //1
+        { dia_semana: 'Segunda-feira', horario_inicio: '09:30', horario_fim: '10:30', //1
             usuario: jose, materia: info, local: local1
-         },
-         { dia_semana: 'Sábado', horario_inicio: '15:00', horario_fim: '18:30', //2
-            usuario: jose, materia: info, local: local1
-         },
-         { dia_semana: 'Quarta-feira', horario_inicio: '09:30', horario_fim: '10:30', //3
-            usuario: marcos, materia: cont, local: local1
-         },
-         { dia_semana: 'Quarta-feira', horario_inicio: '09:30', horario_fim: '10:30', //4
-            usuario: jose, materia: info, local: local2
-         },
-         { dia_semana: 'Quinta-feira', horario_inicio: '17:30', horario_fim: '18:00', //5
-            usuario: marcos, materia: cont, local: local3
-         }
+        },
+        { dia_semana: 'Segunda-feira', horario_inicio: '15:00', horario_fim: '18:30', //2
+        usuario: marcos, materia: info, local: local1
+        },
+        { dia_semana: 'Terça-feira', horario_inicio: '09:30', horario_fim: '10:30', //3
+        usuario: marcos, materia: cont, local: local1
+        },
+        { dia_semana: 'Quarta-feira', horario_inicio: '09:30', horario_fim: '10:30', //4
+        usuario: jose, materia: info, local: local2
+        },
+        { dia_semana: 'Quinta-feira', horario_inicio: '17:30', horario_fim: '18:00', //5
+        usuario: marcos, materia: cont, local: local3
+        }
     ]
     await Promise.all(monitorias.map(async (dados) => { 
         if (dados.usuario && dados.materia && dados.local){
@@ -115,10 +114,10 @@ async function seed() {
 
     //Cadastro de agendas
     const agendas = [
-        { nomeMateria: 'Estatística', dia_semana: "Sábado", horario_inicio: '09:30', horario_fim: '10:30', //1
+        { nomeMateria: 'Estatística', dia_semana: "Segunda-feira", horario_inicio: '09:30', horario_fim: '10:30', //1
             usuario: teste, local: local1 
         },
-        { nomeMateria: 'Gestão de Equipes', dia_semana: "Sabado", horario_inicio: '09:30', horario_fim: '10:30', //1
+        { nomeMateria: 'Gestão de Equipes', dia_semana: "Segunda-feira", horario_inicio: '09:30', horario_fim: '10:30', //1
             usuario: teste, local: local2 
         },
         { nomeMateria: 'Gestão de Equipes', dia_semana: "Quinta-feira", horario_inicio: '09:30', horario_fim: '10:30', //1

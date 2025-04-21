@@ -46,8 +46,7 @@ export default class MonitoriaController{
           foto: monitoria.usuario.idFoto,
           idFoto: monitoria.materia.idFoto
         })}
-
-	      }
+      }
 
 //mostra todas as monitorias do dia da semana da data escolhida
 	static async show (req: Request, res: Response){

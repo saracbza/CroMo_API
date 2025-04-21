@@ -1,6 +1,6 @@
 export const diasDaSemana = [
-    "Segunda-feira", "Terça-feira", "Quarta-feira", 
-    "Quinta-feira", "Sexta-feira", "Sábado", "Domingo", 
+    "Domingo", "Segunda-feira", "Terça-feira", 
+    "Quarta-feira", "Quinta-feira", "Sexta-feira", "Sábado", 
 ]
 
 //identificar dia da semana a partir de uma data
