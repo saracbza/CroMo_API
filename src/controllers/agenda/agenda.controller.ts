@@ -24,8 +24,8 @@ export default class AgendaController{
         return  res.status(400).json({error: "Todos os dados são obrigatórios!"})
 
         const semanaLower = [
-          "domingo", "segunda-feira", "terça-feira", "quarta-feira", 
-          "quinta-feira", "sexta-feira", "sábado"
+          "segunda-feira", "terça-feira", "quarta-feira", 
+          "quinta-feira", "sexta-feira", "sábado", "domingo",
       ]
 
         if (!semanaLower.includes(dia_semana.toLowerCase()))
@@ -51,41 +51,44 @@ export default class AgendaController{
 
 	      }  
      
-     static async show (req: Request, res: Response){
-      const idUsuario = req.headers.userId
-      
-      if (!idUsuario || isNaN(Number(idUsuario))) return  res.status(401).json({ error: 'Usuário não autenticado' })
-
-      const usuario = await Usuario.findOneBy({id: Number(idUsuario)})
-      if (!usuario) res.json("Usuário não existe")
-      
-      if (usuario !== null) {
-        const agendas = await Agenda.find({
-          relations: ['local'],
-          where: { usuario: usuario }
-        })
-
-        const resultado = agendas.map (agenda => {
-          return {
+        static async show (req: Request, res: Response) {
+          const { monitorId } = req.params
+        
+          if (!monitorId || isNaN(Number(monitorId))) {
+            return res.status(400).json({ error: 'Monitor não informado corretamente' })
+          }
+        
+          const monitor = await Usuario.findOneBy({ id: Number(monitorId) })
+        
+          if (!monitor) return res.status(404).json({ error: 'Monitor não encontrado' })
+          if (monitor.tipo !== 'Monitor') return res.status(403).json({ error: 'Usuário informado não é um monitor' })
+        
+          const agendas = await Agenda.find({
+            relations: ['local'],
+            where: { usuario: { id: monitor.id } }
+          })
+        
+          console.log('Agendas encontradas:', agendas.map(a => `(${a.id}) "${a.dia_semana}"`))
+        
+          const resultado = agendas.map(agenda => ({
             id: agenda.id,
             materia: agenda.nome_materia,
             dia_semana: agenda.dia_semana,
             horario: `${agenda.horario_inicio} - ${agenda.horario_fim}`,
-            local: agenda.local ?
-            (agenda.local.numero ? `${agenda.local.tipo} ${agenda.local.numero}` : `${agenda.local.tipo}`) 
-            : '',
-          }
-       })
+            local: agenda.local
+              ? (agenda.local.numero ? `${agenda.local.tipo} ${agenda.local.numero}` : `${agenda.local.tipo}`)
+              : '',
+          }))
+        
+          resultado.sort((a, b) =>
+            diasDaSemana.findIndex(d => d.toLowerCase() === a.dia_semana.toLowerCase()) -
+            diasDaSemana.findIndex(d => d.toLowerCase() === b.dia_semana.toLowerCase())
+          )
+        
+          return res.status(200).json(resultado)
+        }
 
-       //resultado ordenado por dia da semana
-       resultado.sort((a, b) => diasDaSemana.indexOf(a.dia_semana) - diasDaSemana.indexOf(b.dia_semana))
-
-       console.log(resultado)
-       return res.status(200).json(resultado)
-      }
-       
-   }  
-   static async delete (req: Request, res: Response) {
+  static async delete (req: Request, res: Response) {
     const { id } = req.params
     const idUsuario = req.headers.userId
 
