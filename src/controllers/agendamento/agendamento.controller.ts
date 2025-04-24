@@ -80,6 +80,12 @@ export default class AgendamentoController {
           agendamento.usuario = usuario
 
           await agendamento.save()
+          console.log("Agendamento realizado!",
+            {id: agendamento.id,
+              data: agendamento.data,
+              usuario: { id: usuario.id, nome: usuario.nome },
+              monitoria: { id: monitoria.id, materia: monitoria.materia.nome },
+              observacao: agendamento.observacao})
         
           return res.status(201).json({
             id: agendamento.id,
@@ -88,6 +94,7 @@ export default class AgendamentoController {
             monitoria: { id: monitoria.id, materia: monitoria.materia.nome },
             observacao: agendamento.observacao
           })
+
         }
         return res.json('Erro com usuário')
     }
@@ -121,6 +128,7 @@ export default class AgendamentoController {
         if (!idUsuario || isNaN(Number(idUsuario))) res.status(401).json({ error: 'Usuário não autenticado' })
         const usuario = await Usuario.findOneBy({id: Number(idUsuario)})
         if (usuario !== null){
+        //exibição para usuário monitor
         if (usuario?.tipo == "Monitor") {
 
         //encontrar as monitorias deste monitor para dps poder retornar os agendamentos delas
@@ -162,13 +170,18 @@ export default class AgendamentoController {
                 obs: agendamento.observacao,
                 dia_semana: monitoria.dia_semana || '',
                 horario: `${monitoria.horario_inicio} - ${monitoria.horario_fim}`,
+                idMonitoria: monitoria.id,
+                idFotoMateria: monitoria.materia.idFoto ?? '1',
+                idFotoMonitor: monitoria.usuario.idFoto ?? '1',
+                monitor: monitoria.usuario.nome,
+                id: agendamento.id
             }
           })
         )
         const resultadoOrdenado = resultado.sort((a, b) => a.data.getTime() - b.data.getTime())
         return res.status(200).json(resultadoOrdenado)
         }
-
+        //exibição para usuário aluno
         else if (usuario?.tipo == "Aluno"){        
 
           console.log("Consulta: agendamentos - Aluno")
@@ -183,6 +196,7 @@ export default class AgendamentoController {
       let local: string, materia: string
         async function dados(agendamento: Agendamento){
           const monitoria = await Monitoria.find({ where: {id: agendamento.monitoria.id}, relations: ['materia', 'local'] })
+          if (!monitoria) return res.status(404).json({error: "Monitoria não encontrada"})
           console.log('Monitoria: ', monitoria)
           const localA = monitoria.map(m => (m.local.numero ? `${m.local.tipo} ${m.local.numero}` : `${m.local.tipo}`))
           const materiaA = monitoria.map(m => (m.materia.nome))
@@ -202,6 +216,10 @@ export default class AgendamentoController {
                 obs: agendamento.observacao,
                 dia_semana: agendamento.monitoria?.dia_semana || '',
                 horario: `${agendamento.monitoria?.horario_inicio} - ${agendamento.monitoria?.horario_fim}`,
+                idMonitoria: agendamento.monitoria?.id,
+                idFotoMateria: agendamento.monitoria?.materia?.idFoto,
+                idFotoMonitor: agendamento.monitoria?.usuario?.idFoto,
+                monitor: agendamento.monitoria?.usuario?.nome
             }
         }))
         return res.status(200).json(resultado)
