@@ -81,20 +81,22 @@ export default class MonitoriaController{
               : '',
               monitor: monitoria.usuario.nome,
               foto: monitoria.usuario.idFoto,
-              idFoto: monitoria.materia.idFoto
+              idMonitor: monitoria.usuario.id,
+              idFoto: monitoria.materia.idFoto,
+              idFotoMonitor: monitoria.usuario.idFoto
             }
          })
          console.log(resultado)
          return res.status(200).json(resultado)
      }     
   
-  //mostra todas as monitorias do dia da semana da data escolhida
+  //mostra todas as monitorias do dia da semana da data escolhida, de acordo com o monitor selecionado
 	static async showMonitor (req: Request, res: Response){
     const { data, idMonitor } = req.body
     const idUsuario = req.headers.userId
 
     const teste = idMonitor
-    console.log(teste)
+    console.log("Id do monitor selecionado: ", teste)
 
     if (!idUsuario || isNaN(Number(idUsuario))) return res.status(401).json({ error: 'Usuário não autenticado' })
 

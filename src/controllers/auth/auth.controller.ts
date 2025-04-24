@@ -4,7 +4,8 @@ import Usuario from '../../models/Usuario'
 import { emailInstitucional } from '../../utils/validacoes'
 import jwt from 'jsonwebtoken'
 import axios from 'axios'
-import * as admin from 'firebase-admin'
+//import * as admin from 'firebase-admin'
+const admin = require('firebase-admin')
 
 export default class AuthController {
 
