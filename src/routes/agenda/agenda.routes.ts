@@ -6,6 +6,7 @@ const agendaRoutes = Router()
 
 agendaRoutes.post('/', authMiddleware, AgendaController.store)
 agendaRoutes.get('/', authMiddleware, AgendaController.show)
+agendaRoutes.get('/showAgenda', authMiddleware, AgendaController.showAgenda)
 agendaRoutes.delete('/:id', authMiddleware, AgendaController.delete)
 
 export default agendaRoutes

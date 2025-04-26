@@ -6,12 +6,12 @@ import Agenda from '../../models/Agenda'
 
 export default class AgendaController{
     static async store (req: Request, res: Response){
-        const idUsuario = req.headers.userId
+        const usuarioId = req.headers.userId
         const { dia_semana, horario_inicio, horario_fim, idLocal, nomeMateria } = req.body 
         
-        if (!idUsuario || isNaN(Number(idUsuario))) return res.status(401).json({ error: 'Usuário não autenticado' })
+        if (!usuarioId || isNaN(Number(usuarioId))) return res.status(401).json({ error: 'Usuário não autenticado' })
 
-        const usuario = await Usuario.findOneBy({id: Number(idUsuario)})
+        const usuario = await Usuario.findOneBy({id: Number(usuarioId)})
         if (usuario?.tipo == "Monitor") return  res.status(403).json("Usuário não possui permissão de acesso")
 
         if(!idLocal || isNaN(Number(idLocal))) return  res.status(400).json("Local é obrigatório")
@@ -88,16 +88,51 @@ export default class AgendaController{
           return res.status(200).json(resultado)
         }
 
+        static async showAgenda(req: Request, res: Response) {
+          const usuarioId = req.headers.userId
+        
+          if (!usuarioId || isNaN(Number(usuarioId))) {
+            return res.status(401).json({ error: 'Usuário não autenticado' })
+          }
+        
+          const usuario = await Usuario.findOneBy({ id: Number(usuarioId) })
+          if (!usuario) return res.status(404).json({ error: 'Usuário não encontrado' })
+        
+          const agendas = await Agenda.find({
+            where: { usuario: { id: usuario.id } },
+            relations: ['local'],
+          })
+        
+          console.log('Agendas encontradas:', agendas.map(a => `(${a.id}) "${a.dia_semana}"`))
+        
+          const resultado = agendas.map(agenda => ({
+            id: agenda.id,
+            materia: agenda.nome_materia,
+            dia_semana: agenda.dia_semana,
+            horario: `${agenda.horario_inicio} - ${agenda.horario_fim}`,
+            local: agenda.local
+              ? (agenda.local.numero ? `${agenda.local.tipo} ${agenda.local.numero}` : `${agenda.local.tipo}`)
+              : '',
+          }))
+        
+          resultado.sort((a, b) =>
+            diasDaSemana.findIndex(d => d.toLowerCase() === a.dia_semana.toLowerCase()) -
+            diasDaSemana.findIndex(d => d.toLowerCase() === b.dia_semana.toLowerCase())
+          )
+        
+          return res.status(200).json(resultado)
+        }        
+
   static async delete (req: Request, res: Response) {
     const { id } = req.params
-    const idUsuario = req.headers.userId
+    const usuarioId = req.headers.userId
 
     if(!id || isNaN(Number(id))) {
       return res.status(400).json({ error: 'A agenda deve ser informada para exclusão' })
     }
 
-    if (!idUsuario || isNaN(Number(idUsuario))) return res.status(401).json({ error: 'Usuário sem autenticação' })
-    const usuario = await Usuario.findOneBy({ id: Number(idUsuario) })
+    if (!usuarioId || isNaN(Number(usuarioId))) return res.status(401).json({ error: 'Usuário sem autenticação' })
+    const usuario = await Usuario.findOneBy({ id: Number(usuarioId) })
     
     if (!usuario) return res.status(401).json({ error: 'Usuário não autenticado' })
     const agenda = await Agenda.findOne({ where: {id: Number(id), usuario: usuario }})
