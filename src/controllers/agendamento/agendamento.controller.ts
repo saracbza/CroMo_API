@@ -194,20 +194,25 @@ export default class AgendamentoController {
         } )
 
       let local: string, materia: string
-        async function dados(agendamento: Agendamento){
-          const monitoria = await Monitoria.find({ where: {id: agendamento.monitoria.id}, relations: ['materia', 'local'] })
-          if (!monitoria) return res.status(404).json({error: "Monitoria não encontrada"})
-          console.log('Monitoria: ', monitoria)
-          const localA = monitoria.map(m => (m.local.numero ? `${m.local.tipo} ${m.local.numero}` : `${m.local.tipo}`))
-          const materiaA = monitoria.map(m => (m.materia.nome))
-
-            local = localA[0]
-            materia = materiaA[0]
-          }
+      async function dados(agendamento: Agendamento) {
+        const monitoria = await Monitoria.findOne({
+          where: { id: agendamento.monitoria.id },
+          relations: ['materia', 'local', 'usuario']
+        })
+      
+        if (!monitoria) return res.status(404).json({ error: "Monitoria não encontrada" })
+      
+        agendamento.monitoria = monitoria
+      
+        local = monitoria.local.numero ? `${monitoria.local.tipo} ${monitoria.local.numero}` : monitoria.local.tipo
+        materia = monitoria.materia.nome
+      }
 
           const resultado = await Promise.all(agendamentos.map(async (agendamento) => {
             await dados(agendamento)
-    
+            console.log("monitor", agendamento.monitoria?.usuario?.nome, 
+              "icon", agendamento.monitoria?.materia?.idFoto, 
+              "foto", agendamento.monitoria?.usuario?.idFoto)
             return {
                 id: agendamento.id,
                 local,
@@ -228,7 +233,7 @@ export default class AgendamentoController {
       }}
 
     static async delete (req: Request, res: Response) {
-    const { id } = req.params
+    const { id } = req.body
     const idUsuario = req.headers.userId
 
     if(!id || isNaN(Number(id))) {
@@ -236,7 +241,7 @@ export default class AgendamentoController {
     }
 
     if (!idUsuario || isNaN(Number(idUsuario))) return res.status(401).json({ error: 'Usuário sem autenticação' })
-    const usuario = await Usuario.findOneBy({id: Number(id)})
+    const usuario = await Usuario.findOneBy({id: Number(idUsuario)})
     
     if (!usuario) return res.status(401).json({ error: 'Usuário não autenticado' })
     const agendado = await Agendamento.findOne({ where: {id: Number(id), usuario: usuario }})
