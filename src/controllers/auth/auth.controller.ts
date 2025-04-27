@@ -54,7 +54,9 @@ export default class AuthController {
           email: usuario.email,
           tipo: usuario.tipo,
           curso: usuario.curso,
+          teams: usuario.teams,
           foto: usuario.idFoto,
+          ra: usuario.ra
         }
     })
 
@@ -65,7 +67,7 @@ export default class AuthController {
   }
     
   static async store (req: Request, res: Response){
-    const { nome, email, senha, curso, tipo, idFoto } = req.body 
+    const { nome, email, curso, tipo, idFoto, ra } = req.body 
     
     if(!nome || !tipo ) return res.status(400).json({error: "Nome e tipo obrigatórios!"}) 
     if(!email) return res.status(400).json({error: "Email e senha obrigatórios!"})
@@ -86,6 +88,7 @@ export default class AuthController {
       usuario.tipo = tipo
       usuario.curso = curso ?? ""
       usuario.idFoto = idFoto ?? 1
+      usuario.ra = ra
 
     await usuario.save()
 
@@ -95,6 +98,7 @@ export default class AuthController {
       email: usuario.email,
       tipo: usuario.tipo,
       curso: usuario.curso,
+      teams: usuario.teams,
       idFoto: usuario.idFoto
     })
   }
@@ -127,6 +131,41 @@ export default class AuthController {
           token })
     }
 */
+
+    static async updatePerfil(req: Request, res: Response) {
+      console.log("Entrou no updatePerfil:", req.body)
+
+      const { nome, ra, teams, fotoId } = req.body
+      const idUsuario = req.headers.userId
+
+      if (!nome || nome.trim().length < 5) {
+        return res.status(400).json({ error: 'Nome deve ter pelo menos 5 caracteres' })
+      }
+
+      const usuario = await Usuario.findOneBy({ id: Number(idUsuario) })
+      if (!usuario) return res.status(404).json({ error: 'Usuário não encontrado' })
+
+      usuario.nome = nome
+      usuario.ra = ra || usuario.ra
+      usuario.teams = teams || usuario.teams
+      usuario.idFoto = fotoId || usuario.idFoto
+
+      await usuario.save()
+
+      return res.status(200).json({
+        message: 'Perfil atualizado com sucesso',
+        usuario: {
+          id: usuario.id,
+          nome: usuario.nome,
+          email: usuario.email,
+          curso: usuario.curso,
+          teams: usuario.teams,
+          idFoto: usuario.idFoto,
+          ra: usuario.ra
+        }
+      })
+    }
+
     static async logout (req: Request, res:Response) {
         const idUsuario = req.headers.userId
         const usuario = await Usuario.findOneBy ({ id: Number(idUsuario) })

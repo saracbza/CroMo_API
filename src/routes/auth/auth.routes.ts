@@ -15,12 +15,15 @@ authRoutes.get('/perfil', firebaseAuth, async (req, res) => {
     return res.json({
         nome: usuario.nome,
         curso: usuario.curso,
-        tipo: usuario.tipo
+        teams: usuario.teams,
+        tipo: usuario.tipo,
+        ra: usuario.ra
     })
 })
 
 authRoutes.post('/register', AuthController.store)
 authRoutes.post('/firebase-login', firebaseAuth, AuthController.firebaseLogin)
+authRoutes.put('/perfil', authMiddleware, AuthController.updatePerfil)
 //authRoutes.post('/login', AuthController.login)
 //authRoutes.post('/refresh', AuthController.refresh)
 authRoutes.post('/logout', authMiddleware, AuthController.logout)

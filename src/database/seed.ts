@@ -14,23 +14,23 @@ async function seed() {
 
     // Cadastro dos usuários
     const usuarios = [
-        { email:'teste@email.com', nome: 'Teste Gonçalves', //1
-            curso: opcoesCursos.ads, tipo:'Aluno', idFoto: 2 },
+        { email:'teste@email.com', nome: 'Teste Gonçalves', teams: 'teste@email.com', //1
+            curso: opcoesCursos.ads, tipo:'Aluno', idFoto: 2, ra: '1050482223031' },
 
-        { email:'jose@fatec.sp.gov.br', nome: 'Jose Alves', //1
-            curso: opcoesCursos.vazio, tipo:'Monitor', idFoto: 3 }, 
+        { email:'jose@fatec.sp.gov.br', nome: 'Jose Alves', teams: 'jose@fatec.sp.gov.br', //1
+            curso: opcoesCursos.vazio, tipo:'Monitor', idFoto: 3, ra: '1050482223032' }, 
 
-        { email:'abner@fatec.sp.gov.br', nome: 'Abner Fernandes', //2
-            curso: opcoesCursos.gstE, tipo:'Aluno', idFoto: 3  },
+        { email:'abner@fatec.sp.gov.br', nome: 'Abner Fernandes', teams: 'abner@fatec.sp.gov.br', //2
+            curso: opcoesCursos.gstE, tipo:'Aluno', idFoto: 3, ra: '1050482223033'  },
 
-        { email:'rafaela@fatec.sp.gov.br', nome: 'Rafaela Gomes', //3
-            curso: opcoesCursos.ads, tipo:'Aluno' },
+        { email:'rafaela@fatec.sp.gov.br', nome: 'Rafaela Gomes', teams: 'rafaela@fatec.sp.gov.br', //3
+            curso: opcoesCursos.ads, tipo:'Aluno', ra: '1050482223034' },
 
-        { email:'marcos@fatec.sp.gov.br', nome: 'Marcos Roberto', //4
-            curso: opcoesCursos.vazio, tipo:'Monitor', idFoto: 4 },
+        { email:'marcos@fatec.sp.gov.br', nome: 'Marcos Roberto', teams: 'marcos@fatec.sp.gov.br', //4
+            curso: opcoesCursos.vazio, tipo:'Monitor', idFoto: 4, ra: '1050482223038' },
 
-        { email:'giu@fatec.sp.gov.br', nome: 'Giulia Rodrigues', //5
-            curso: opcoesCursos.comex, tipo: 'Aluno', idFoto: 2 }
+        { email:'giu@fatec.sp.gov.br', nome: 'Giulia Rodrigues', teams: 'giu@fatec.sp.gov.br', //5
+            curso: opcoesCursos.comex, tipo: 'Aluno', idFoto: 2, ra: '1050482223039' }
     ]
 
     await Promise.all(usuarios.map(async (dados) => { 
@@ -39,6 +39,8 @@ async function seed() {
         usuario.nome = dados.nome
         usuario.tipo = dados.tipo
         usuario.curso = dados.curso
+        usuario.teams = dados.teams
+        usuario.ra = dados.ra
         usuario.idFoto = dados.idFoto ? dados.idFoto : 1
         await usuario.save() 
       }))

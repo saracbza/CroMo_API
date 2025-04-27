@@ -22,6 +22,12 @@ export default class Usuario extends BaseEntity {
 
 	  @Column()
 	  nome!: string
+
+	  @Column()
+	  ra!: string
+
+	  @Column()
+	  teams!: string
 	  
 	  @Column({
         type: 'text',
@@ -46,4 +52,5 @@ export default class Usuario extends BaseEntity {
 
 	  @OneToMany(() => EsqueciSenha, token => token.usuario)
 	  esqueciSenha?: EsqueciSenhaToken[]
+  foto: any;
 }
