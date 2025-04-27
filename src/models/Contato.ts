@@ -9,6 +9,9 @@ export default class Contato extends BaseEntity {
       @Column()
       nome!: string
 
+      @Column({default: 1})
+      idFoto!: number
+
       @Column()
       teamsUser!: string
 

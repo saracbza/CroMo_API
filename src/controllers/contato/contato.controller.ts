@@ -6,7 +6,7 @@ import { emailInstitucional } from '../../utils/validacoes'
 export default class ContatoController{
     static async store (req: Request, res: Response){
         const idUsuario = req.headers.userId
-        const { nome, teamsUser, teamsEmail } = req.body 
+        const { nome, teamsUser, teamsEmail, idFoto } = req.body 
         
         if (!idUsuario || isNaN(Number(idUsuario))) return res.status(401).json({ error: 'Usuário não autenticado' })
 
@@ -21,6 +21,7 @@ export default class ContatoController{
         contato.nome = nome
         contato.teamsUser = teamsUser
         contato.teamsEmail = teamsEmail
+        contato.idFoto = idFoto
         await contato.save() 
           
         return res.status(201).json({
@@ -31,13 +32,14 @@ export default class ContatoController{
      
      static async show (req: Request, res: Response){
         const contatos = await Contato.find()
-
+        console.log(contatos)
         const resultado = contatos.map (c => {
           return {
             id: c.id,
             nome: c.nome,
             teamsUser: c.teamsUser,
             teamsEmail: c.teamsEmail,
+            idFoto: c.idFoto
           }
        })
        return res.status(200).json(resultado)
