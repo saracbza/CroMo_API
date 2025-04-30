@@ -38,6 +38,7 @@ export default class AuthController {
 
       const payload = {
         id: usuario.id,
+        idFoto: usuario.idFoto,
         email: usuario.email,
         tipo: usuario.tipo
       }
@@ -55,7 +56,7 @@ export default class AuthController {
           tipo: usuario.tipo,
           curso: usuario.curso,
           teams: usuario.teams,
-          foto: usuario.idFoto,
+          idFoto: usuario.idFoto,
           ra: usuario.ra
         }
     })

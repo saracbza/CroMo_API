@@ -28,6 +28,7 @@ export default class ContatoController{
           nome: contato.nome,
           teamsUser: contato.teamsUser,
           teamsEmail: contato.teamsEmail,
+          tipo: contato.tipo
         })}  
      
      static async show (req: Request, res: Response){
@@ -39,7 +40,8 @@ export default class ContatoController{
             nome: c.nome,
             teamsUser: c.teamsUser,
             teamsEmail: c.teamsEmail,
-            idFoto: c.idFoto
+            idFoto: c.idFoto,
+            tipo: c.tipo
           }
        })
        return res.status(200).json(resultado)

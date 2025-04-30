@@ -142,15 +142,15 @@ async function seed() {
 
      //Cadastro de Contatos
     const contatos = [
-        { nome: 'Adilson Rodrigues', teamsUser: 'adilson_rodrigues14', teamsEmail: 'adilson.rodrigues@fatec.sp.gov.br', idFoto: 2 },
-        { nome: 'Acelino Freitas', teamsUser: 'acelino_freitas27', teamsEmail: 'acelino.freitas@fatec.sp.gov.br', idFoto: 1 },
-        { nome: 'John Jones', teamsUser: 'john_jones83', teamsEmail: 'john.jones@fatec.sp.gov.br', idFoto: 3 },
-        { nome: 'Roberta Lima', teamsUser: 'roberta_lima49', teamsEmail: 'roberta.lima@fatec.sp.gov.br', idFoto: 5 },
-        { nome: 'Renato Gomes', teamsUser: 'renato_gomes42', teamsEmail: 'renato.gomes@fatec.sp.gov.br', idFoto: 4 },
-        { nome: 'Mariana Makashev', teamsUser: 'mariana_makashev91', teamsEmail: 'mariana.makashev@fatec.sp.gov.br', idFoto: 2 },
-        { nome: 'Khabib Nurmagumedov', teamsUser: 'khabib_nurmagumedov13', teamsEmail: 'khabib.nurmagumedov@fatec.sp.gov.br', idFoto: 1 },
-        { nome: 'Laura Valentin', teamsUser: 'laura_valentin67', teamsEmail: 'laura.valentin@fatec.sp.gov.br', idFoto: 1 },
-        { nome: 'Osvaldo de Oliveira', teamsUser: 'osvaldo_oliveira85', teamsEmail: 'osvaldo.oliveira@fatec.sp.gov.br', idFoto: 5 }
+        { nome: 'Adilson Rodrigues', teamsUser: 'adilson_rodrigues14', teamsEmail: 'adilson.rodrigues@fatec.sp.gov.br', idFoto: 2, tipo: 'Monitor' },
+        { nome: 'Acelino Freitas', teamsUser: 'acelino_freitas27', teamsEmail: 'acelino.freitas@fatec.sp.gov.br', idFoto: 1, tipo: 'Professor'  },
+        { nome: 'John Jones', teamsUser: 'john_jones83', teamsEmail: 'john.jones@fatec.sp.gov.br', idFoto: 3, tipo: 'Professor'  },
+        { nome: 'Roberta Lima', teamsUser: 'roberta_lima49', teamsEmail: 'roberta.lima@fatec.sp.gov.br', idFoto: 5, tipo: 'Professor'  },
+        { nome: 'Renato Gomes', teamsUser: 'renato_gomes42', teamsEmail: 'renato.gomes@fatec.sp.gov.br', idFoto: 4, tipo: 'Professor'  },
+        { nome: 'Mariana Makashev', teamsUser: 'mariana_makashev91', teamsEmail: 'mariana.makashev@fatec.sp.gov.br', idFoto: 2, tipo: 'Monitor'  },
+        { nome: 'Khabib Nurmagumedov', teamsUser: 'khabib_nurmagumedov13', teamsEmail: 'khabib.nurmagumedov@fatec.sp.gov.br', idFoto: 1, tipo: 'Monitor'  },
+        { nome: 'Laura Valentin', teamsUser: 'laura_valentin67', teamsEmail: 'laura.valentin@fatec.sp.gov.br', idFoto: 1, tipo: 'Professor'  },
+        { nome: 'Osvaldo de Oliveira', teamsUser: 'osvaldo_oliveira85', teamsEmail: 'osvaldo.oliveira@fatec.sp.gov.br', idFoto: 5, tipo: 'Monitor'  }
         
     ]
 
@@ -160,6 +160,7 @@ async function seed() {
         contato.teamsUser = dados.teamsUser
         contato.teamsEmail = dados.teamsEmail
         contato.idFoto = dados.idFoto ? dados.idFoto : 2
+        contato.tipo = dados.tipo
         await contato.save()
      }))
       console.log('Finalizando cadastros...')
