@@ -248,8 +248,10 @@ export default class AgendamentoController {
 
     if (!agendado) return res.status(404).json({ error: 'Agendamento não encontrado' })
 
+    console.log('Agendado:', agendado, ' - usuario: ', usuario)
+    
     await agendado.remove()
-    return res.status(204).json('Agendamento excluído!')
+    return res.status(200).json('Agendamento excluído!')
     }
   }
 
