@@ -16,7 +16,7 @@ export default class Contato extends BaseEntity {
       teamsUser?: string
 
       @Column()
-      tipo!: string
+      tipo?: string
 
       @Column()
       teamsEmail?: string
