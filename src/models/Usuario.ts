@@ -24,7 +24,7 @@ export default class Usuario extends BaseEntity {
 	  nome!: string
 
 	  @Column()
-	  ra!: string
+	  ra?: string
 
 	  @Column()
 	  teams!: string

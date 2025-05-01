@@ -5,7 +5,8 @@ import authMiddleware from '../../middlewares/auth.middleware'
 const agendamentoRoutes = Router()
 
 agendamentoRoutes.post('/', authMiddleware, AgendamentoController.store)
-agendamentoRoutes.get('/', authMiddleware, AgendamentoController.show)
+agendamentoRoutes.get('/aluno', authMiddleware, AgendamentoController.showAluno)
+agendamentoRoutes.get('/monitor', authMiddleware, AgendamentoController.showMonitor)
 agendamentoRoutes.delete('/delete', authMiddleware, AgendamentoController.delete)
 
 export default agendamentoRoutes

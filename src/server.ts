@@ -3,8 +3,10 @@ import { initializeDatabase, dataBase } from './database/ormconfig'
 import seed from './database/seed'
 import routes from './routes'
 import cors from 'cors'
+import dotenv from 'dotenv'
 
-require('dotenv').config()
+dotenv.config()
+
 const app = express()
 const port = Number(process.env.PORT) || 3000
 

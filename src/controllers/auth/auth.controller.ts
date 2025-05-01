@@ -89,7 +89,8 @@ export default class AuthController {
       usuario.tipo = tipo
       usuario.curso = curso ?? ""
       usuario.idFoto = idFoto ?? 1
-      usuario.ra = ra
+      usuario.ra = ra,
+      usuario.teams = email
 
     await usuario.save()
 
