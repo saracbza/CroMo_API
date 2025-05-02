@@ -4,11 +4,11 @@ import Usuario from '../../models/Usuario'
 import Monitoria from '../../models/Monitoria'
 import { diaDaSemana, TipoLocal } from '../../utils/validacoes'
 import { Between, MoreThanOrEqual } from 'typeorm'
+import Materia from '../../models/Materia'
 //import axios from 'axios'
 
 export default class AgendamentoController {
     static async store(req: Request, res: Response){
-
         const { data, idMonitoria, obs } = req.body
         const idUsuario = req.headers.userId
 
@@ -262,5 +262,43 @@ export default class AgendamentoController {
     await agendado.remove()
     return res.status(200).json('Agendamento excluído!')
     }
-  }
 
+
+  static async alunosAgendados (req: Request, res: Response){
+    const idUsuario = req.headers.userId
+    const { id } = req.body
+
+    if (!idUsuario || isNaN(Number(idUsuario))) return res.status(401).json({ error: 'Usuário não autenticado' })
+    const usuario = await Usuario.findOneBy({id: Number(idUsuario)})
+    if (!usuario) return res.status(401).json({ error: 'Usuário não autenticado' })
+    
+    if (!id || isNaN(Number(id))) return res.status(400).json({ error: 'Selecione um agendamento' })
+    
+    const agendamento = await Agendamento.findOne({ where: { id: Number(id) }, relations: ['monitoria']})
+    if (!agendamento) return res.status(400).json({ error: 'Selecione um agendamento' })
+    const monitoriaId = agendamento.monitoria.id
+
+    const dataAgendamento = new Date((agendamento.data).toISOString().split('T')[0])
+
+    const monitoria = await Monitoria.findOneBy({ id: monitoriaId })
+    if (!monitoria) return res.status(400).json({ error: 'Monitoria não existe' })
+
+      if (usuario !== null){
+        const agendamentos = await Agendamento.find({
+          where: { monitoria: monitoria, data: dataAgendamento },
+          relations: ['monitoria', 'usuario'] 
+          })     
+        const resultado = agendamentos.map(x => ({
+                materia: x.monitoria.materia,
+                data: dataAgendamento,
+                id: x.usuario.id,
+                nome: x.usuario.nome,
+                email: x.usuario.email,
+                ra: x.usuario.ra
+              })).sort((a, b) => a.nome.localeCompare(b.nome))
+
+      return res.status(200).json(resultado)
+      }
+      res.status(401).json({ error: 'Usuário não autenticado' })
+    }
+}

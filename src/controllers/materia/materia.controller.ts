@@ -23,17 +23,17 @@ static async store (req: Request, res: Response){
 	 }
 	 
 static async show (req: Request, res: Response){
-        const  idUsuario = req.headers.userId
-        if (!idUsuario || isNaN(Number(idUsuario))) return res.status(401).json({ error: 'Usuário não autenticado' })    
+    const  idUsuario = req.headers.userId
+    if (!idUsuario || isNaN(Number(idUsuario))) return res.status(401).json({ error: 'Usuário não autenticado' })    
         
-        const usuario = await Usuario.findOneBy({id: Number(idUsuario)})
-        if (!usuario) res.json("Usuário não encontrado")    
+    const usuario = await Usuario.findOneBy({id: Number(idUsuario)})
+    if (!usuario) res.json("Usuário não encontrado")    
 
-        const materia = await Materia.find()
+    const materia = await Materia.find()
         
-        if (!materia) 
-	      return res.status(404)
+    if (!materia) 
+	  return res.status(404)
 
-        return res.json(materia) 
+    return res.json(materia) 
     }	
 }
