@@ -7,7 +7,7 @@ import Usuario from "../models/Usuario"
 import { opcoesCursos, TipoLocal } from "../utils/validacoes"
 
 async function seed() {
-    const cadastrar = false
+    const cadastrar = true
 
     if (cadastrar){
     console.log('Iniciando cadastros...')
@@ -18,22 +18,22 @@ async function seed() {
             curso: opcoesCursos.ads, tipo:'Aluno', idFoto: 2, ra: '1050482223031' },
 
         { email:'andre@fatec.sp.gov.br', nome: 'Andre Yu Iha', teams: 'andre@fatec.sp.gov.br', //1
-            curso: opcoesCursos.vazio, tipo:'Monitor', idFoto: 3, ra: '1050482223032' }, 
+            curso: opcoesCursos.vazio, tipo:'Monitor', idFoto: 9, ra: '1050482223032' }, 
 
         { email:'douglas@fatec.sp.gov.br', nome: 'Douglas dos Santos Fonte', teams: 'douglas@fatec.sp.gov.br', //2
-            curso: opcoesCursos.gstE, tipo:'Monitor', idFoto: 3, ra: '1050482223033'  },
+            curso: opcoesCursos.gstE, tipo:'Monitor', idFoto: 2, ra: '1050482223033'  },
 
         { email:'matheus@fatec.sp.gov.br', nome: 'Matheus Fernando de Oliveira', teams: 'matheus@fatec.sp.gov.br', //3
-            curso: opcoesCursos.ads, tipo:'Monitor', ra: '1050482223034' },
+            curso: opcoesCursos.ads, tipo:'Monitor', idFoto: 3, ra: '1050482223034' },
 
         { email:'reginaldo@fatec.sp.gov.br', nome: 'Reginaldo Serafim Junior', teams: 'reginaldo@fatec.sp.gov.br', //4
-            curso: opcoesCursos.vazio, tipo:'Monitor', idFoto: 4, ra: '1050482223038' },
+            curso: opcoesCursos.vazio, tipo:'Monitor', idFoto: 11, ra: '1050482223038' },
 
         { email:'giu@fatec.sp.gov.br', nome: 'Giulia Rodrigues', teams: 'giu@fatec.sp.gov.br', //5
-            curso: opcoesCursos.comex, tipo: 'Aluno', idFoto: 2, ra: '1050482223039' },
+            curso: opcoesCursos.comex, tipo: 'Aluno', idFoto: 8, ra: '1050482223039' },
 
         { email:'marcos@fatec.sp.gov.br', nome: 'Marcos Roberto', teams: 'marcos@fatec.sp.gov.br', //5
-            curso: opcoesCursos.comex, tipo: 'Aluno', idFoto: 2, ra: '1050482223039' }
+            curso: opcoesCursos.comex, tipo: 'Monitor', idFoto: 9, ra: '1050482223039' }
     ]
 
     await Promise.all(usuarios.map(async (dados) => { 
@@ -69,10 +69,10 @@ async function seed() {
         await materia.save() 
       }))
 
-    const info = await Materia.findOneBy({nome: 'Informática (Matutino)', idFoto: 1})
     const cont = await Materia.findOneBy({nome: 'Contabilidade (Tarde)', idFoto: 1})
-    const ingles = await Materia.findOneBy({nome: 'Inglês', idFoto: 1})
-    const simu = await Materia.findOneBy({nome: 'Simulação', idFoto: 1})
+    const info = await Materia.findOneBy({nome: 'Informática (Matutino)', idFoto: 5})
+    const ingles = await Materia.findOneBy({nome: 'Inglês', idFoto: 2})
+    const simu = await Materia.findOneBy({nome: 'Simulação', idFoto: 3})
 
     //Cadastro dos locais
     const locais = [
@@ -125,7 +125,7 @@ async function seed() {
         usuario: douglas, materia: info, local: local6
         },
         { dia_semana: 'Terça-feira', horario_inicio: '13:00', horario_fim: '15:00', //5
-        usuario: reginaldo, materia: cont, simu: local7
+        usuario: reginaldo, materia: simu, local: local7
         },
         { dia_semana: 'Quarta-feira', horario_inicio: '12:30', horario_fim: '13:30', //5
         usuario: andre, materia: cont, local: local1
