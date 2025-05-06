@@ -122,8 +122,6 @@ export default class AgendamentoController {
    
     static async showAluno (req: Request, res: Response){
 		    const idUsuario = req.headers.userId
-        const hoje = new Date()
-        hoje.setHours(0, 0, 0, 0)
 
         if (!idUsuario || isNaN(Number(idUsuario))) res.status(401).json({ error: 'Usuário não autenticado' })
         const usuario = await Usuario.findOneBy({id: Number(idUsuario)})
@@ -135,7 +133,7 @@ export default class AgendamentoController {
           console.log("Consulta: agendamentos - Aluno")
           const agendamentos = await Agendamento.find({ where: { 
             usuario: usuario, 
-            data: MoreThanOrEqual(hoje) 
+           // data: MoreThanOrEqual(hoje)
           },
             order: {data: 'ASC'},
             relations: ['monitoria']
@@ -178,10 +176,78 @@ export default class AgendamentoController {
         return res.status(400).json({ error: 'Tipo de usuário inválido' });
       }}
 
+    static async showAlunoDate (req: Request, res: Response){
+      const idUsuario = req.headers.userId
+      const { data } = req.body
+      
+      if (!idUsuario || isNaN(Number(idUsuario))) res.status(401).json({ error: 'Usuário não autenticado' })
+      const usuario = await Usuario.findOneBy({id: Number(idUsuario)})
+
+      if (!data) return res.status(400).json("Data deve ser informada")
+      
+      var aDate = new Date(data).toISOString().split('T')[0]
+
+      if (usuario !== null){
+      
+      //exibição para usuário aluno
+      if (usuario?.tipo == "Aluno"){        
+
+        console.log("Consulta: agendamentos - Aluno")
+        const agendamentos = await Agendamento.find({ where: { 
+          usuario: usuario,
+          //data: MoreThanOrEqual(hoje)
+        },
+          order: {data: 'ASC'},
+          relations: ['monitoria']
+      } )
+
+    let local: string, materia: string
+    async function dados(agendamento: Agendamento) {
+      const monitoria = await Monitoria.findOne({
+        where: { id: agendamento.monitoria.id },
+        relations: ['materia', 'local', 'usuario']
+      })
+    
+      if (!monitoria) return res.status(404).json({ error: "Monitoria não encontrada" })
+    
+      agendamento.monitoria = monitoria
+    
+      local = monitoria.local.numero ? `${monitoria.local.tipo} ${monitoria.local.numero}` : monitoria.local.tipo
+      materia = monitoria.materia.nome
+    }
+
+    const agendamentosFiltrados = agendamentos.filter(
+      (a) => a.data.toISOString().split('T')[0] === aDate
+    )
+
+        const resultado = await Promise.all(agendamentosFiltrados.map(async (agendamento) => {
+          if (agendamento.data.toISOString().split('T')[0] == aDate){
+          await dados(agendamento)
+
+          return {
+              id: agendamento.id,
+              local,
+              materia,
+              data: agendamento.data,
+              obs: agendamento.observacao,
+              dia_semana: agendamento.monitoria?.dia_semana || '',
+              horario: `${agendamento.monitoria?.horario_inicio} - ${agendamento.monitoria?.horario_fim}`,
+              idMonitoria: agendamento.monitoria?.id,
+              idFotoMateria: agendamento.monitoria?.materia?.idFoto,
+              idFotoMonitor: agendamento.monitoria?.usuario?.idFoto,
+              monitor: agendamento.monitoria?.usuario?.nome
+          }
+      }
+      else { return null }
+      }))
+      console.log("resultado aluno", resultado)
+      return res.status(200).json(resultado)
+      }
+      return res.status(400).json({ error: 'Tipo de usuário inválido' })
+    }}
+
     static async showMonitor (req: Request, res: Response){
       const idUsuario = req.headers.userId
-      const hoje = new Date()
-      hoje.setHours(0, 0, 0, 0)
 
       if (!idUsuario || isNaN(Number(idUsuario))) res.status(401).json({ error: 'Usuário não autenticado' })
       const usuario = await Usuario.findOneBy({id: Number(idUsuario)})
@@ -241,6 +307,83 @@ export default class AgendamentoController {
       return res.status(400).json({ error: 'Tipo de usuário inválido' });
     }}  
 
+    static async showMonitorDate (req: Request, res: Response){
+      const idUsuario = req.headers.userId
+      const { data } = req.body
+
+      if (!idUsuario || isNaN(Number(idUsuario))) res.status(401).json({ error: 'Usuário não autenticado' })
+      const usuario = await Usuario.findOneBy({id: Number(idUsuario)})
+
+      if (!data) return res.status(400).json("Data deve ser informada")
+
+      const aDateStr = new Date(data).toISOString().split('T')[0]
+
+      if (usuario !== null){
+      //exibição para usuário monitor
+      if (usuario?.tipo == "Monitor") {
+
+      //encontrar as monitorias deste monitor para dps poder retornar os agendamentos delas
+        const monitorias = await Monitoria.find({
+          where: { usuario: usuario },
+          relations: ['agendamentos', 'local', 'materia', 'usuario'] 
+          })
+
+      //contagem de agendamentos associados a essa monitoria
+          const contagemAlunos = new Map<number, Map<string, number>>()
+          monitorias.forEach(monitoria => {
+          
+          if (!contagemAlunos.has(monitoria.id)) {
+            contagemAlunos.set(monitoria.id, new Map<string, number>())
+          }
+        
+          const dataContagem = contagemAlunos.get(monitoria.id)!
+          monitoria.agendamentos.forEach(agendamento => {
+
+            console.log("Agendamentodata ", new Date (agendamento.data))
+              const dataConv = agendamento.data.toISOString().split('T')[0]
+              const count = dataContagem.get(dataConv) || 0
+              dataContagem.set(dataConv, count + 1)
+              console.log("data contagem e dataconv", dataContagem, dataConv)
+          })
+      })
+        console.log("Consulta: agendamentos - Monitor")
+      
+        const resultado = monitorias.flatMap(monitoria => 
+          monitoria.agendamentos
+            .filter(agendamento => agendamento.data.toISOString().split('T')[0] === aDateStr)
+            .map(agendamento => {
+              const dataConv = agendamento.data.toISOString().split('T')[0]
+              const quantidadeAluno = contagemAlunos.get(monitoria.id)?.get(dataConv) || 0
+              return {
+                local: monitoria.local
+                  ? (monitoria.local.numero ? `${monitoria.local.tipo} ${monitoria.local.numero}` : `${monitoria.local.tipo}`)
+                  : '',
+                quantidadeAluno,
+                data: agendamento.data,
+                obs: agendamento.observacao,
+                dia_semana: monitoria.dia_semana || '',
+                horario: `${monitoria.horario_inicio} - ${monitoria.horario_fim}`,
+                idMonitoria: monitoria.id,
+                idFotoMateria: monitoria.materia.idFoto ?? '1',
+                id: agendamento.id,
+                materia: monitoria.materia?.nome,
+              }
+            })
+        )
+    
+        const resultadoOrdenado = resultado.sort((a, b) => a.data.getTime() - b.data.getTime())
+    
+        /*if (resultadoOrdenado.length === 0) {
+          return res.status(200).json(null)
+        }*/
+    
+        return res.status(200).json(resultadoOrdenado)
+      }
+    
+      return res.status(400).json({ error: 'Tipo de usuário inválido' })
+    }
+    }
+
     static async delete (req: Request, res: Response) {
     const { id } = req.body
     const idUsuario = req.headers.userId
@@ -299,6 +442,6 @@ export default class AgendamentoController {
 
       return res.status(200).json(resultado)
       }
-      res.status(401).json({ error: 'Usuário não autenticado' })
+      res.status(400).json({ error: 'Usuário não autenticado' })
     }
 }
