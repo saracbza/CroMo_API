@@ -7,7 +7,7 @@ import Usuario from "../models/Usuario"
 import { opcoesCursos, TipoLocal } from "../utils/validacoes"
 
 async function seed() {
-    const cadastrar = false
+    const cadastrar = true
 
     if (cadastrar){
     console.log('Iniciando cadastros...')
