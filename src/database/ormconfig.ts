@@ -8,7 +8,7 @@ const dataBase = new DataSource({
   type: 'sqlite',
   database: process.env.DATABASE || path.join(__dirname, '../database/database.sqlite'),
   entities: [
-    path.join(__dirname, '../models/*.ts')
+    path.join(__dirname, '../models/*.{ts,js}')
   ],
   logging: true,
   synchronize: true,
