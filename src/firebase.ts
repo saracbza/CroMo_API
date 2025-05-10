@@ -1,5 +1,5 @@
 var admin = require("firebase-admin")
-var serviceAccount = require("/home/site/wwwroot/firebaseServiceAccountKey.json")
+const serviceAccount = JSON.parse(process.env.FIREBASE_PRIVATE_KEY as string)
 
 admin.initializeApp({
   credential: admin.credential.cert(serviceAccount)
