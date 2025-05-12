@@ -21,7 +21,7 @@ async function seed() {
             curso: opcoesCursos.vazio, tipo:'Monitor', idFoto: 9, ra: '1050482223032' }, 
 
         { email:'douglas@fatec.sp.gov.br', nome: 'Douglas dos Santos Fonte', teams: 'douglas@fatec.sp.gov.br', //2
-            curso: opcoesCursos.gstE, tipo:'Monitor', idFoto: 2, ra: '1050482223033'  },
+            curso: opcoesCursos.gstE, tipo:'Monitor', idFoto: 1, ra: '1050482223033'  },
 
         { email:'matheus@fatec.sp.gov.br', nome: 'Matheus Fernando de Oliveira', teams: 'matheus@fatec.sp.gov.br', //3
             curso: opcoesCursos.ads, tipo:'Monitor', idFoto: 3, ra: '1050482223034' },
@@ -33,7 +33,7 @@ async function seed() {
             curso: opcoesCursos.comex, tipo: 'Aluno', idFoto: 8, ra: '1050482223039' },
 
         { email:'marcos@fatec.sp.gov.br', nome: 'Marcos Roberto', teams: 'marcos@fatec.sp.gov.br', //5
-            curso: opcoesCursos.comex, tipo: 'Monitor', idFoto: 9, ra: '1050482223039' }
+            curso: opcoesCursos.comex, tipo: 'Monitor', idFoto: 1, ra: '1050482223039' }
     ]
 
     await Promise.all(usuarios.map(async (dados) => { 
@@ -56,10 +56,10 @@ async function seed() {
 
     // Cadastro das materias
     const materias = [
-        { nome: 'Contabilidade (Tarde)', idFoto: 1 }, //1
-        { nome: 'Informática (Matutino)', idFoto: 5 }, //2
-        { nome: 'Inglês', idFoto: 2 }, //3
-        { nome: 'Simulação', idFoto: 3 } //4
+        { nome: 'Contabilidade (Tarde)', idFoto: 10 }, //1
+        { nome: 'Informática (Matutino)', idFoto: 11 }, //2
+        { nome: 'Inglês', idFoto: 12 }, //3
+        { nome: 'Simulação', idFoto: 13 } //4
     ]
 
     await Promise.all(materias.map(async (dados) => { 
@@ -69,10 +69,10 @@ async function seed() {
         await materia.save() 
       }))
 
-    const cont = await Materia.findOneBy({nome: 'Contabilidade (Tarde)', idFoto: 1})
-    const info = await Materia.findOneBy({nome: 'Informática (Matutino)', idFoto: 5})
-    const ingles = await Materia.findOneBy({nome: 'Inglês', idFoto: 2})
-    const simu = await Materia.findOneBy({nome: 'Simulação', idFoto: 3})
+    const cont = await Materia.findOneBy({nome: 'Contabilidade (Tarde)', idFoto: 10})
+    const info = await Materia.findOneBy({nome: 'Informática (Matutino)', idFoto: 11})
+    const ingles = await Materia.findOneBy({nome: 'Inglês', idFoto: 12})
+    const simu = await Materia.findOneBy({nome: 'Simulação', idFoto: 13})
 
     //Cadastro dos locais
     const locais = [
@@ -206,7 +206,7 @@ async function seed() {
      //Cadastro de Contatos
     const contatos = [
         { nome: 'Andre Yu Iha', teamsUser: 'andre_yuIha', teamsEmail: 'andre.yuIha@fatec.sp.gov.br', idFoto: 9, tipo: 'Monitor' },
-        { nome: 'Douglas dos Santos Fonte', teamsUser: 'douglas_santos', teamsEmail: 'douglas.santos@fatec.sp.gov.br', idFoto: 2, tipo: 'Monitor'  },
+        { nome: 'Douglas dos Santos Fonte', teamsUser: 'douglas_santos', teamsEmail: 'douglas.santos@fatec.sp.gov.br', idFoto: 1, tipo: 'Monitor'  },
         { nome: 'Matheus Fernando de Oliveira', teamsUser: 'mateus_fernandes83', teamsEmail: 'mateus.fernandes@fatec.sp.gov.br', idFoto: 3, tipo: 'Monitor'  },
         { nome: 'Reginaldo Serafim Junior', teamsUser: 'reginaldo_serafim49', teamsEmail: 'reginaldo.serafim@fatec.sp.gov.br', idFoto: 11, tipo: 'Monitor'  },
         { nome: 'Sérgio Clauss', teamsUser: 'sergio_clauss', teamsEmail: 'sergio.clauss@fatec.sp.gov.br', idFoto: 5, tipo: 'Professor'  },
