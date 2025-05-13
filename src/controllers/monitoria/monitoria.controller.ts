@@ -4,6 +4,12 @@ import Materia from '../../models/Materia'
 import { diaDaSemana } from '../../utils/validacoes'
 import Usuario from '../../models/Usuario'
 import Local from '../../models/Local'
+import dayjs from 'dayjs'
+import utc from 'dayjs/plugin/utc'
+import timezone from 'dayjs/plugin/timezone'
+
+dayjs.extend(utc)
+dayjs.extend(timezone)
 
 export default class MonitoriaController{
     static async store (req: Request, res: Response){
@@ -91,50 +97,65 @@ export default class MonitoriaController{
      }     
   
   //mostra todas as monitorias do dia da semana da data escolhida, de acordo com o monitor selecionado
-	static async showMonitor (req: Request, res: Response){
-    const { data, idMonitor } = req.body
-    const idUsuario = req.headers.userId
+    static async showMonitor(req: Request, res: Response) {
+      const { data, idMonitor } = req.body
+      const idUsuario = req.headers.userId
+  
+      const teste = idMonitor
+      console.log("Id do monitor selecionado: ", teste)
+  
+      if (!idUsuario || isNaN(Number(idUsuario))) return res.status(401).json({ error: 'Usuário não autenticado' })
+  
+      const usuario = await Usuario.findOneBy({ id: Number(idUsuario) })
+      if (!usuario) return res.json("Usuário não existe")
+  
+      if (!idMonitor || isNaN(Number(idMonitor))) return res.json({ error: "Monitor deve ser preenchido" })
+  
+      const monitor = await Usuario.findOneBy({ id: Number(idMonitor) })
+      if (!monitor || monitor?.tipo != "Monitor") return res.json({error: "Id informado deve ser de monitor"})
+      if (!data) return res.json("Data deve ser preenchida")
+  
+      const dataForm = dayjs(data).tz('America/Sao_Paulo')
+      const diaIndex = dataForm.day()
 
-    const teste = idMonitor
-    console.log("Id do monitor selecionado: ", teste)
+      const dias = [
+        'Domingo',
+        'Segunda-feira',
+        'Terça-feira',
+        'Quarta-feira',
+        'Quinta-feira',
+        'Sexta-feira',
+        'Sábado'
+      ]
+      const diaSemana = dias[diaIndex]
+      
+      console.log("Data ajustada (BR):", dataForm.format())
+      console.log("Dia da semana:", diaSemana)
+      
+      const monitorias = await Monitoria.find({
+        relations: ['materia', 'local', 'usuario'],
+        where: { dia_semana: diaSemana, usuario: monitor }
+      })
 
-    if (!idUsuario || isNaN(Number(idUsuario))) return res.status(401).json({ error: 'Usuário não autenticado' })
-
-    const usuario = await Usuario.findOneBy({ id: Number(idUsuario) })
-    if (!usuario) return res.json("Usuário não existe")
-    
-    if (!idMonitor || isNaN(Number(idMonitor))) return res.json({ error: "Monitor deve ser preenchido" })
-
-    const monitor = await Usuario.findOneBy({ id: Number(idMonitor) })
-    if (!monitor || monitor?.tipo != "Monitor") return res.json({error: "Id informado deve ser de monitor"})
-    if (!data) return res.json("Data deve ser preenchida")
-    const dataForm = new Date(data)
-
-    const dia_semana = diaDaSemana(new Date(dataForm))
-    
-    const monitorias = await Monitoria.find({
-      relations: ['materia', 'local', 'usuario'],
-      where: { dia_semana: dia_semana, usuario: monitor }
-     })
-
-     const resultado = monitorias.map (monitoria => {
+      const resultado = monitorias.map(monitoria => {
         return {
           id: monitoria.id,
           materia: monitoria.materia.nome,
           dia_semana: monitoria.dia_semana,
           horario: `${monitoria.horario_inicio} - ${monitoria.horario_fim}`,
           local: monitoria.local ?
-          (monitoria.local.numero ? `${monitoria.local.tipo} ${monitoria.local.numero}` : `${monitoria.local.tipo}`) 
-          : '',
+           (monitoria.local.numero ? `${monitoria.local.tipo} ${monitoria.local.numero}` : `${monitoria.local.tipo}`)
+            : '',
           monitor: monitoria.usuario.nome,
           idFoto: monitoria.materia.idFoto
         }
-     })
-     console.log(resultado)
-     return res.status(200).json(resultado)
- } 
-     
-   /*  static async showSemana (req: Request, res: Response){
+      })
+      console.log(resultado)
+      return res.status(200).json(resultado)
+    }
+  }
+  
+/*  static async showSemana (req: Request, res: Response){
       const { diaSemana } = req.body
       const idUsuario = req.headers.userId
       
@@ -193,4 +214,3 @@ export default class MonitoriaController{
       }
        
    }  */ 
-    }

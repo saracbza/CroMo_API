@@ -11,6 +11,9 @@
     "class-transformer": "^0.5.1",
     "class-validator": "^0.14.1",
     "cors": "^2.8.5",
+    "date-fns": "^4.1.0",
+    "date-fns-tz": "^3.2.0",
+    "dayjs": "^1.11.13",
     "dotenv": "^16.4.7",
     "express": "^4.19.2",
     "firebase": "^11.6.0",
@@ -19,7 +22,9 @@
     "node-localstorage": "^3.0.5",
     "nodemailer": "^6.10.0",
     "sqlite3": "^5.1.7",
-    "typeorm": "^0.3.20"
+    "timezone": "^1.0.23",
+    "typeorm": "^0.3.20",
+    "utc": "^0.1.0"
   },
   "scripts": {
     "dev": "nodemon --exec ts-node-dev src/server.ts",
