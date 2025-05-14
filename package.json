@@ -25,9 +25,7 @@
     "node-localstorage": "^3.0.5",
     "nodemailer": "^6.10.0",
     "sqlite3": "^5.1.7",
-    "timezone": "^1.0.23",
-    "typeorm": "^0.3.20",
-    "utc": "^0.1.0"
+    "typeorm": "^0.3.20"
   },
   "scripts": {
     "dev": "nodemon --exec ts-node-dev src/server.ts",
