@@ -429,7 +429,8 @@ export default class AgendamentoController {
                 id: x.usuario.id,
                 nome: x.usuario.nome,
                 email: x.usuario.email,
-                ra: x.usuario.ra
+                ra: x.usuario.ra,
+                obs: x.observacao || ''
               })).sort((a, b) => a.nome.localeCompare(b.nome))
 
       return res.status(200).json(resultado)
