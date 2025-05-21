@@ -10,7 +10,7 @@ import contatoRoutes from './contato/contato.routes'
 const routes = Router()
 
 routes.use('/agendamento', agendamentoRoutes)
-routes.use('/materia', materiaRoutes)
+routes.use('/materias', materiaRoutes)
 routes.use('/monitoria', monitoriaRoutes)
 routes.use('/local', localRoutes)
 routes.use('/auth', authRoutes)
