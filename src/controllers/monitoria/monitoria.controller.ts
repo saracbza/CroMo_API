@@ -133,4 +133,35 @@ export default class MonitoriaController{
      console.log(resultado)
      return res.status(200).json(resultado)
    } 
+
+   static async showAll (req: Request, res: Response){
+      const { idMateria } = req.body
+
+      if (!idMateria || isNaN(Number(idMateria))) return res.json({ error: 'Matéria não selecionada' })
+
+      const materia = await Materia.findOneBy({ id: Number(idMateria) })
+      if (!materia) return res.json("Matéria não existe")
+
+      const monitorias = await Monitoria.find({
+        where:{ materia: materia },
+        relations: ['materia', 'local', 'usuario']})
+      const resultado = monitorias.map (m => {
+        return {
+          id: m.id,
+          nome: m.materia.nome,
+          dia_semana: (m.dia_semana).toLowerCase(),
+          horario: `${m.horario_inicio} - ${m.horario_fim}`,
+          idFoto: m.materia.idFoto,
+          local: m.local ?
+            (m.local.numero ? `${m.local.tipo} ${m.local.numero}` : `${m.local.tipo}`) 
+            : '',
+          monitorNome: m.usuario.nome,
+          monitorEmail: m.usuario.email,
+        }
+
+      })
+      console.log(resultado)
+
+      return res.status(200).json(resultado)
+    }
 }
