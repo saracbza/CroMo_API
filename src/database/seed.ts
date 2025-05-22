@@ -14,26 +14,35 @@ async function seed() {
 
     // Cadastro dos usuários
     const usuarios = [
-        { email:'teste@email.com', nome: 'Teste Gonçalves', teams: 'teste@email.com', //1
-            curso: opcoesCursos.ads, tipo:'Aluno', idFoto: 1, ra: '1050482223031' },
+        { email:'teste@email.com', nome: 'Teste Gonçalves', teams: 'teste_Teams@email.com', //1
+            curso: opcoesCursos.ads, tipo:'Aluno', idFoto: 4, ra: '1050482223030' },
 
-        { email:'andre@fatec.sp.gov.br', nome: 'Andre Yu Iha', teams: 'andre@fatec.sp.gov.br', //2
-            curso: opcoesCursos.vazio, tipo:'Monitor', idFoto: 9, ra: '1050482223032' }, 
+        { email:'monitor@email.com', nome: 'Monitor de Teste', teams: 'monitor_Teams@email.com', //2
+            curso: opcoesCursos.vazio, tipo:'Monitor', idFoto: 15, ra: '1050482223031' },
 
-        { email:'douglas@fatec.sp.gov.br', nome: 'Douglas dos Santos Fonte', teams: 'douglas@fatec.sp.gov.br', //4
-            curso: opcoesCursos.gstE, tipo:'Monitor', idFoto: 1, ra: '1050482223033'  },
+        { email:'aluno@email.com', nome: 'Aluno da FATEC', teams: 'aluno_Teams@email.com', //3
+            curso: opcoesCursos.ads, tipo:'Aluno', idFoto: 26, ra: '1050482223032' },
 
-        { email:'matheus@fatec.sp.gov.br', nome: 'Matheus Fernando de Oliveira', teams: 'matheus@fatec.sp.gov.br', //4
-            curso: opcoesCursos.ads, tipo:'Monitor', idFoto: 3, ra: '1050482223034' },
+        { email:'clauss@fatec.sp.gov.br', nome: 'Itala Murielle', teams: 'clauss_Teams@fatec.sp.gov.br', //4
+            curso: opcoesCursos.vazio, tipo:'Monitor', idFoto: 28, ra: '1050482223033' }, 
 
-        { email:'reginaldo@fatec.sp.gov.br', nome: 'Reginaldo Serafim Junior', teams: 'reginaldo@fatec.sp.gov.br', //5
-            curso: opcoesCursos.vazio, tipo:'Monitor', idFoto: 11, ra: '1050482223038' },
+        { email:'daniela@fatec.sp.gov.br', nome: 'Daniela Domingues', teams: 'daniela_Teams@fatec.sp.gov.br', //5
+            curso: opcoesCursos.vazio, tipo:'Monitor', idFoto: 35, ra: '1050482223034'  },
 
-        { email:'giu@fatec.sp.gov.br', nome: 'Giulia Rodrigues', teams: 'giu@fatec.sp.gov.br', //6
-            curso: opcoesCursos.comex, tipo: 'Aluno', idFoto: 12, ra: '1050482223039' },
+        { email:'pedro@fatec.sp.gov.br', nome: 'Pedro Henrique', teams: 'pedro_Teams@fatec.sp.gov.br', //6
+            curso: opcoesCursos.vazio, tipo:'Monitor', idFoto: 27, ra: '1050482223035' },
 
-        { email:'marcos@fatec.sp.gov.br', nome: 'Marcos Roberto', teams: 'marcos@fatec.sp.gov.br', //7
-            curso: opcoesCursos.comex, tipo: 'Monitor', idFoto: 1, ra: '1050482223040' }
+        { email:'graziealla@fatec.sp.gov.br', nome: 'Graziella Souza', teams: 'graziealla_Teams@fatec.sp.gov.br', //7
+            curso: opcoesCursos.vazio, tipo:'Monitor', idFoto: 10, ra: '1050482223036' },
+
+        { email:'victor@fatec.sp.gov.br', nome: 'Victor Scatamburlo', teams: 'victor_Teams@fatec.sp.gov.br', //8
+            curso: opcoesCursos.vazio, tipo: 'Monitor', idFoto: 29, ra: '1050482223037' },
+
+        { email:'itala@fatec.sp.gov.br', nome: 'Itala Murielle Marques Nascimento', teams: 'victor_Teams@fatec.sp.gov.br', //9
+            curso: opcoesCursos.vazio, tipo: 'Monitor', idFoto: 12, ra: '1050482223038' },
+
+        { email:'giu@fatec.sp.gov.br', nome: 'Giulia Rodrigues', teams: 'giu_Teams@fatec.sp.gov.br', //10
+            curso: opcoesCursos.comex, tipo: 'Aluno', idFoto: 36, ra: '1050482223039' }
     ]
 
     await Promise.all(usuarios.map(async (dados) => { 
@@ -49,17 +58,23 @@ async function seed() {
       }))
 
       const teste = await Usuario.findOneBy({nome: "Teste Gonçalves"})
-      const andre = await Usuario.findOneBy({nome: "Andre Yu Iha"})
-      const douglas = await Usuario.findOneBy({nome: "Douglas dos Santos Fonte"})
-      const mateus = await Usuario.findOneBy({nome: "Matheus Fernando de Oliveira"})
-      const reginaldo = await Usuario.findOneBy({nome: "Reginaldo Serafim Junior"})
+      const monitor = await Usuario.findOneBy({nome: "Monitor de Teste"})
+      const aluno = await Usuario.findOneBy({nome: "Aluno da FATEC"})
+      const clauss = await Usuario.findOneBy({nome: "Sérgio Clauss"})
+      const daniela = await Usuario.findOneBy({nome: "Daniela Domingues"})
+      const pedro = await Usuario.findOneBy({nome: "Pedro Henrique"})
+      const graziella = await Usuario.findOneBy({nome: "Graziella Souza"})
+      const victor = await Usuario.findOneBy({nome: "Victor Scatamburlo"})
+      const itala = await Usuario.findOneBy({nome: "Itala Murielle Marques Nascimento"})
+
 
     // Cadastro das materias
     const materias = [
-        { nome: 'Contabilidade (Tarde)', idFoto: 10 }, //1
-        { nome: 'Informática (Matutino)', idFoto: 11 }, //2
-        { nome: 'Inglês', idFoto: 12 }, //4
-        { nome: 'Simulação', idFoto: 13 } //4
+        { nome: 'Contabilidade', idFoto: 10, monitorias: 1 }, //1
+        { nome: 'Simulação', idFoto: 13, monitorias: 2 }, //2
+        { nome: 'Algoritmo', idFoto: 14, monitorias: 3 }, //3
+        { nome: 'Informática', idFoto: 11, monitorias: 4 }, //4
+        { nome: 'Análise Financeira', idFoto: 12, monitorias: 5 }, //5
     ]
 
     await Promise.all(materias.map(async (dados) => { 
@@ -69,23 +84,28 @@ async function seed() {
         await materia.save() 
       }))
 
-    const cont = await Materia.findOneBy({nome: 'Contabilidade (Tarde)', idFoto: 10})
-    const info = await Materia.findOneBy({nome: 'Informática (Matutino)', idFoto: 11})
-    const ingles = await Materia.findOneBy({nome: 'Inglês', idFoto: 12})
+    const cont = await Materia.findOneBy({nome: 'Contabilidade', idFoto: 10})
     const simu = await Materia.findOneBy({nome: 'Simulação', idFoto: 13})
+    const alg = await Materia.findOneBy({nome: 'Algoritmo', idFoto: 14})
+    const financ = await Materia.findOneBy({nome: 'Análise Financeira', idFoto: 12})
+    const info = await Materia.findOneBy({nome: 'Informática', idFoto: 11})
 
     //Cadastro dos locais
     const locais = [
         { numero: 10, tipo: TipoLocal.sala }, //1
         { numero: 14, tipo: TipoLocal.sala }, //2
-        { numero: 15, tipo: TipoLocal.sala }, //4
+        { numero: 15, tipo: TipoLocal.sala }, //3
 
-        { numero: 3, tipo: TipoLocal.lab }, //4
-        { numero: 6, tipo: TipoLocal.lab }, //5
+        { numero: 6, tipo: TipoLocal.lab }, //4
+        { numero: 7, tipo: TipoLocal.lab }, //5
         { numero: 11, tipo: TipoLocal.lab }, //6
-        { numero: 13, tipo: TipoLocal.lab }, //7
+        { numero: 12, tipo: TipoLocal.lab }, //7
+        { numero: 13, tipo: TipoLocal.lab }, //8
 
-        { tipo: TipoLocal.biblio }, //8
+        { tipo: TipoLocal.biblio }, //9
+
+        { numero: 8, tipo: TipoLocal.lab }, //10
+
     ]
 
     await Promise.all(locais.map(async (dados) => { 
@@ -103,66 +123,68 @@ async function seed() {
     const local6  = await Local.findOneBy({id: 6})
     const local7  = await Local.findOneBy({id: 7})
     const local8  = await Local.findOneBy({id: 8})
+    const local9  = await Local.findOneBy({id: 9})
+    const local10  = await Local.findOneBy({id: 10})
+
 
     //Cadastro das monitorias
     const monitorias = [
-        { dia_semana: 'Segunda-feira', horario_inicio: '18:30', horario_fim: '19:30', //2
-        usuario: andre, materia: cont, local: local8
+        { dia_semana: 'Segunda-feira', horario_inicio: '18:00', horario_fim: '19:00', //1
+        usuario: daniela, materia: cont, local: local5
         },
-        { dia_semana: 'Segunda-feira', horario_inicio: '12:00', horario_fim: '14:00', //2
-        usuario: douglas, materia: info, local: local5
+        { dia_semana: 'Segunda-feira', horario_inicio: '11:30', horario_fim: '13:00', //2
+            usuario: pedro, materia: simu, local: local7
         },
-        { dia_semana: 'Segunda-feira', horario_inicio: '11:10', horario_fim: '13:10', //2
-        usuario: mateus, materia: ingles, local: local2
+        { dia_semana: 'Segunda-feira', horario_inicio: '11:00', horario_fim: '13:00', //3
+            usuario: graziella, materia: alg, local: local4
         },
-        { dia_semana: 'Terça-feira', horario_inicio: '12:30', horario_fim: '13:30', //3
-        usuario: reginaldo, materia: simu, local: local1
+
+
+        { dia_semana: 'Terça-feira', horario_inicio: '18:00', horario_fim: '19:00', //1
+            usuario: daniela, materia: cont, local: local5
         },
-        { dia_semana: 'Terça-feira', horario_inicio: '18:30', horario_fim: '19:30', //3
-        usuario: reginaldo, materia: simu, local: local8
+        { dia_semana: 'Terça-feira', horario_inicio: '11:30', horario_fim: '13:00', //2
+            usuario: pedro, materia: simu, local: local8
         },
-        { dia_semana: 'Terça-feira', horario_inicio: '07:20', horario_fim: '09:20', //3
-        usuario: douglas, materia: info, local: local6
+        { dia_semana: 'Terça-feira', horario_inicio: '07:00', horario_fim: '07:30', //3
+            usuario: graziella, materia: alg, local: local4
         },
-        { dia_semana: 'Terça-feira', horario_inicio: '13:00', horario_fim: '15:00', //3
-        usuario: reginaldo, materia: simu, local: local7
+        { dia_semana: 'Terça-feira', horario_inicio: '17:00', horario_fim: '19:00', //3
+            usuario: victor, materia: info, local: local4
         },
-        { dia_semana: 'Quarta-feira', horario_inicio: '12:30', horario_fim: '13:30', //4
-        usuario: andre, materia: cont, local: local1
+        
+
+        { dia_semana: 'Quarta-feira', horario_inicio: '18:00', horario_fim: '19:00', //1
+            usuario: daniela, materia: cont, local: local5
         },
-        { dia_semana: 'Quarta-feira', horario_inicio: '18:30', horario_fim: '19:30', //4
-        usuario: andre, materia: cont, local: local8
+        { dia_semana: 'Quarta-feira', horario_inicio: '11:30', horario_fim: '13:00', //2
+            usuario: pedro, materia: simu, local: local8
         },
-        { dia_semana: 'Quarta-feira', horario_inicio: '12:00', horario_fim: '14:40', //4
-        usuario: douglas, materia: info, local: local5
+        { dia_semana: 'Quarta-feira', horario_inicio: '07:00', horario_fim: '07:30', //3
+            usuario: graziella, materia: alg, local: local4
         },
-        { dia_semana: 'Quarta-feira', horario_inicio: '07:20', horario_fim: '09:20', //4
-        usuario: mateus, materia: ingles, local: local3
+        { dia_semana: 'Quarta-feira', horario_inicio: '18:00', horario_fim: '20:40', //3
+            usuario: itala, materia: financ, local: local10
         },
-        { dia_semana: 'Quinta-feira', horario_inicio: '12:30', horario_fim: '13:30', //5
-        usuario: andre, materia: cont, local: local1
+
+
+        { dia_semana: 'Quinta-feira', horario_inicio: '18:00', horario_fim: '19:00', //1
+            usuario: daniela, materia: cont, local: local5
         },
-        { dia_semana: 'Quinta-feira', horario_inicio: '18:30', horario_fim: '19:30', //5
-        usuario: andre, materia: cont, local: local8
+        { dia_semana: 'Quinta-feira', horario_inicio: '11:30', horario_fim: '13:00', //2
+            usuario: pedro, materia: simu, local: local6
         },
-        { dia_semana: 'Quinta-feira', horario_inicio: '12:00', horario_fim: '14:00', //5
-        usuario: douglas, materia: info, local: local5
+        { dia_semana: 'Quinta-feira', horario_inicio: '11:00', horario_fim: '13:00', //3
+            usuario: graziella, materia: alg, local: local4
         },
-        { dia_semana: 'Quinta-feira', horario_inicio: '11:10', horario_fim: '13:10', //5
-        usuario: mateus, materia: ingles, local: local2
+
+
+        { dia_semana: 'Sexta-feira', horario_inicio: '07:00', horario_fim: '07:30', //3
+            usuario: graziella, materia: alg, local: local4
         },
-        { dia_semana: 'Quarta-feira', horario_inicio: '11:10', horario_fim: '14:10', //5
-        usuario: reginaldo, materia: simu, local: local4
-        },
-        { dia_semana: 'Sexta-feira', horario_inicio: '18:30', horario_fim: '19:30', //6
-        usuario: andre, materia: cont, local: local8
-        },
-        { dia_semana: 'Sexta-feira', horario_inicio: '11:10', horario_fim: '13:10', //6
-        usuario: douglas, materia: info, local: local2
-        },
-        { dia_semana: 'Sexta-feira', horario_inicio: '11:10', horario_fim: '14:10', //6
-        usuario: reginaldo, materia: simu, local: local7
-        },
+        { dia_semana: 'Sexta-feira', horario_inicio: '17:00', horario_fim: '19:00', //3
+            usuario: victor, materia: info, local: local4
+        },            
     ]
     await Promise.all(monitorias.map(async (dados) => { 
         if (dados.usuario && dados.materia && dados.local){
@@ -205,16 +227,16 @@ async function seed() {
 
      //Cadastro de Contatos
     const contatos = [
-        { nome: 'Andre Yu Iha', teamsUser: 'andre_yuIha', teamsEmail: 'andre.yuIha@fatec.sp.gov.br', idFoto: 9, tipo: 'Monitor' },
-        { nome: 'Douglas dos Santos Fonte', teamsUser: 'douglas_santos', teamsEmail: 'douglas.santos@fatec.sp.gov.br', idFoto: 1, tipo: 'Monitor'  },
-        { nome: 'Matheus Fernando de Oliveira', teamsUser: 'mateus_fernandes83', teamsEmail: 'mateus.fernandes@fatec.sp.gov.br', idFoto: 3, tipo: 'Monitor'  },
-        { nome: 'Reginaldo Serafim Junior', teamsUser: 'reginaldo_serafim49', teamsEmail: 'reginaldo.serafim@fatec.sp.gov.br', idFoto: 11, tipo: 'Monitor'  },
-        { nome: 'Sérgio Clauss', teamsUser: 'sergio_clauss', teamsEmail: 'sergio.clauss@fatec.sp.gov.br', idFoto: 5, tipo: 'Professor'  },
-        { nome: 'Simone Mendes', teamsUser: 'simone_mendes99', teamsEmail: 'simone.mendes@fatec.sp.gov.br', idFoto: 6, tipo: 'Professor'  },
-        { nome: 'Alexandre Skupien', teamsUser: 'alexandre_skupien17', teamsEmail: 'alexandre.skupien@fatec.sp.gov.br', idFoto: 7, tipo: 'Professor'  },
-        { nome: 'Laura Valentin', teamsUser: 'laura_valentin67', teamsEmail: 'laura.valentin@fatec.sp.gov.br', idFoto: 8, tipo: 'Professor'  },
-        { nome: 'Osvaldo de Oliveira', teamsUser: 'osvaldo_oliveira85', teamsEmail: 'osvaldo.oliveira@fatec.sp.gov.br', idFoto: 9, tipo: 'Professor'  }
-        
+        { nome: 'Daniela Domingues', teamsUser: 'daniela_domingues', teamsEmail: 'daniela_Teams@fatec.sp.gov.br', idFoto: 35, tipo: 'Monitor' },
+        { nome: 'Pedro Henrique', teamsUser: 'pedro_henrique', teamsEmail: 'pedro_Teams@fatec.sp.gov.br', idFoto: 27, tipo: 'Monitor'  },
+        { nome: 'Graziella Souza', teamsUser: 'graziella_souza', teamsEmail: 'graziella_Teams@fatec.sp.gov.br', idFoto: 10, tipo: 'Monitor'  },
+        { nome: 'Victor Scatamburlo', teamsUser: 'victor_scatamburlo', teamsEmail: 'victor_Teams@fatec.sp.gov.br', idFoto: 29, tipo: 'Monitor'  },
+        { nome: 'Itala Murielle', teamsUser: 'itala_murielle', teamsEmail: 'itala_Teams@fatec.sp.gov.br', idFoto: 12, tipo: 'Monitor'  },
+        { nome: 'Simone Mendes', teamsUser: 'simone_mendes99', teamsEmail: 'simone_Teams@fatec.sp.gov.br', idFoto: 33, tipo: 'Professor'  },
+        { nome: 'Alexandre Skupien', teamsUser: 'alexandre_skupien17', teamsEmail: 'alexandre_Teams@fatec.sp.gov.br', idFoto: 1, tipo: 'Professor'  },
+        { nome: 'Laura Valentin', teamsUser: 'laura_valentin67', teamsEmail: 'laura_Teams@fatec.sp.gov.br', idFoto: 20, tipo: 'Professor'  },
+        { nome: 'Sérgio Clauss', teamsUser: 'sergio_clauss', teamsEmail: 'clauss_Teams@fatec.sp.gov.br', idFoto: 28, tipo: 'Professor'  },
+        { nome: 'Michel Munhoz', teamsUser: 'michel_munhoz', teamsEmail: 'michel_Teams@fatec.sp.gov.br', idFoto: 4, tipo: 'Professor'  }
     ]
 
     await Promise.all(contatos.map(async (dados) => { 

@@ -157,6 +157,7 @@ export default class MonitoriaController{
             : '',
           monitorNome: m.usuario.nome,
           monitorEmail: m.usuario.email,
+          monitorTeams: m.usuario.teams
         }
 
       })
