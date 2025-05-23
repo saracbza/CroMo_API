@@ -75,6 +75,7 @@ async function seed() {
         { nome: 'Algoritmo', idFoto: 14, monitorias: 3 }, //3
         { nome: 'Informática', idFoto: 11, monitorias: 4 }, //4
         { nome: 'Análise Financeira', idFoto: 12, monitorias: 5 }, //5
+        { nome: 'Monitoria de teste', idFoto: 6, monitorias: 6 }, //6
     ]
 
     await Promise.all(materias.map(async (dados) => { 
@@ -89,6 +90,7 @@ async function seed() {
     const alg = await Materia.findOneBy({nome: 'Algoritmo', idFoto: 14})
     const financ = await Materia.findOneBy({nome: 'Análise Financeira', idFoto: 12})
     const info = await Materia.findOneBy({nome: 'Informática', idFoto: 11})
+    const test = await Materia.findOneBy({nome: 'Monitoria de teste', idFoto: 6})
 
     //Cadastro dos locais
     const locais = [
@@ -138,6 +140,9 @@ async function seed() {
         { dia_semana: 'Segunda-feira', horario_inicio: '11:00', horario_fim: '13:00', //3
             usuario: graziella, materia: alg, local: local4
         },
+        { dia_semana: 'Segunda-feira', horario_inicio: '18:00', horario_fim: '19:00', //4
+            usuario: monitor, materia: test, local: local5
+        },
 
 
         { dia_semana: 'Terça-feira', horario_inicio: '18:00', horario_fim: '19:00', //1
@@ -149,8 +154,11 @@ async function seed() {
         { dia_semana: 'Terça-feira', horario_inicio: '07:00', horario_fim: '07:30', //3
             usuario: graziella, materia: alg, local: local4
         },
-        { dia_semana: 'Terça-feira', horario_inicio: '17:00', horario_fim: '19:00', //3
+        { dia_semana: 'Terça-feira', horario_inicio: '17:00', horario_fim: '19:00', //4
             usuario: victor, materia: info, local: local4
+        },
+        { dia_semana: 'Terça-feira', horario_inicio: '09:00', horario_fim: '11:00', //5
+            usuario: monitor, materia: test, local: local8
         },
         
 
@@ -163,8 +171,11 @@ async function seed() {
         { dia_semana: 'Quarta-feira', horario_inicio: '07:00', horario_fim: '07:30', //3
             usuario: graziella, materia: alg, local: local4
         },
-        { dia_semana: 'Quarta-feira', horario_inicio: '18:00', horario_fim: '20:40', //3
+        { dia_semana: 'Quarta-feira', horario_inicio: '18:00', horario_fim: '20:40', //4
             usuario: itala, materia: financ, local: local10
+        },
+        { dia_semana: 'Quarta-feira', horario_inicio: '11:00', horario_fim: '13:00', //5
+            usuario: monitor, materia: test, local: local4
         },
 
 
@@ -177,14 +188,20 @@ async function seed() {
         { dia_semana: 'Quinta-feira', horario_inicio: '11:00', horario_fim: '13:00', //3
             usuario: graziella, materia: alg, local: local4
         },
+        { dia_semana: 'Quinta-feira', horario_inicio: '11:00', horario_fim: '13:00', //4
+            usuario: monitor, materia: test, local: local4
+        },
 
 
-        { dia_semana: 'Sexta-feira', horario_inicio: '07:00', horario_fim: '07:30', //3
+        { dia_semana: 'Sexta-feira', horario_inicio: '07:00', horario_fim: '07:30', //1
             usuario: graziella, materia: alg, local: local4
         },
-        { dia_semana: 'Sexta-feira', horario_inicio: '17:00', horario_fim: '19:00', //3
+        { dia_semana: 'Sexta-feira', horario_inicio: '17:00', horario_fim: '19:00', //2
             usuario: victor, materia: info, local: local4
-        },            
+        },       
+        { dia_semana: 'Sexta-feira', horario_inicio: '11:00', horario_fim: '13:00', //3
+            usuario: monitor, materia: test, local: local4
+        }     
     ]
     await Promise.all(monitorias.map(async (dados) => { 
         if (dados.usuario && dados.materia && dados.local){
@@ -244,7 +261,7 @@ async function seed() {
         contato.nome = dados.nome
         contato.teamsUser = dados.teamsUser
         contato.teamsEmail = dados.teamsEmail
-        contato.idFoto = dados.idFoto ? dados.idFoto : 2
+        contato.idFoto = dados.idFoto ? dados.idFoto : 36
         contato.tipo = dados.tipo
         await contato.save()
      }))
